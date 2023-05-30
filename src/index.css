@@ -42,6 +42,13 @@ body {
   --regular-note-width: 50px;
   --sharp-flat-note-width: 30px;
 
+  --blue: #0994FF;
+  --red: #FF3838;
+  --green: #00CB7A;
+  --purple: #A100FF;
+  --pink: #FF38D1;
+  --orange: #FFBA44;
+
 }
 
 .loader {
@@ -471,19 +478,45 @@ body {
   background-color: #232323;
   padding: 1em;
   border-radius: 1em;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 444px;
+  position: relative;
 }
 
-.launchpad-button {
+.launchpad::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 64px;
+  border-radius: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  background-color: #232323;
+}
+
+.launchpad .button {
   width: 64px;
   height: 64px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background-color: black;
   color: white;
   font-family: inherit;
   font-weight: 500;
-  font-size: 1.5em;
+  font-size: 1.1em;
   border-radius: 0.5em;
+  user-select: none;
+  cursor: pointer;
 }
+.launchpad .button.blue {background-color: var(--blue);}
+.launchpad .button.red {background-color: var(--red);}
+.launchpad .button.green {background-color: var(--green);}
+.launchpad .button.purple {background-color: var(--purple);}
+.launchpad .button.pink {background-color: var(--pink);}
+.launchpad .button.orange {background-color: var(--orange);}

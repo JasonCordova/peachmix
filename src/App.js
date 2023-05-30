@@ -24,44 +24,45 @@ const allSharps = [];
 
 var mouseDown = false;
 var tempMode = "menu";
-var allKeys = {
-  49: {character: '1', pressed: false},
-  50: {character: '2', pressed: false},
-  51: {character: '3', pressed: false},
-  52: {character: '4', pressed: false},
-  53: {character: '5', pressed: false},
-  54: {character: '6', pressed: false},
-  55: {character: '7', pressed: false},
-  56: {character: '8', pressed: false},
-  57: {character: '9', pressed: false},
-  48: {character: '0', pressed: false},
-  81: {character: 'Q', pressed: false},
-  87: {character: 'W', pressed: false},
-  69: {character: 'E', pressed: false},
-  82: {character: 'R', pressed: false},
-  84: {character: 'T', pressed: false},
-  89: {character: 'Y', pressed: false},
-  85: {character: 'U', pressed: false},
-  73: {character: 'I', pressed: false},
-  79: {character: 'O', pressed: false},
-  80: {character: 'P', pressed: false},
-  65: {character: 'A', pressed: false},
-  83: {character: 'S', pressed: false},
-  68: {character: 'D', pressed: false},
-  70: {character: 'F', pressed: false},
-  71: {character: 'G', pressed: false},
-  72: {character: 'H', pressed: false},
-  74: {character: 'J', pressed: false},
-  75: {character: 'K', pressed: false},
-  76: {character: 'L', pressed: false},
-  90: {character: 'Z', pressed: false},
-  88: {character: 'X', pressed: false},
-  67: {character: 'C', pressed: false},
-  86: {character: 'V', pressed: false},
-  66: {character: 'B', pressed: false},
-  78: {character: 'N', pressed: false},
-  77: {character: 'M', pressed: false},
-}
+
+var allKeysMap = new Map();
+allKeysMap.set(49, {character: '1', pressed: false, color: "blue"});
+allKeysMap.set(50, {character: '2', pressed: false, color: "blue"});
+allKeysMap.set(51, {character: '3', pressed: false, color: "blue"});
+allKeysMap.set(52, {character: '4', pressed: false, color: "blue"});
+allKeysMap.set(53, {character: '5', pressed: false, color: "blue"});
+allKeysMap.set(54, {character: '6', pressed: false, color: "blue"});
+allKeysMap.set(55, {character: '7', pressed: false, color: "red"});
+allKeysMap.set(56, {character: '8', pressed: false, color: "red"});
+allKeysMap.set(57, {character: '9', pressed: false, color: "red"});
+allKeysMap.set(48, {character: '0', pressed: false, color: "red"});
+allKeysMap.set(81, {character: 'Q', pressed: false, color: "red"});
+allKeysMap.set(87, {character: 'W', pressed: false, color: "red"});
+allKeysMap.set(69, {character: 'E', pressed: false, color: "green"});
+allKeysMap.set(82, {character: 'R', pressed: false, color: "green"});
+allKeysMap.set(84, {character: 'T', pressed: false, color: "green"});
+allKeysMap.set(89, {character: 'Y', pressed: false, color: "green"});
+allKeysMap.set(85, {character: 'U', pressed: false, color: "green"});
+allKeysMap.set(73, {character: 'I', pressed: false, color: "green"});
+allKeysMap.set(79, {character: 'O', pressed: false, color: "purple"});
+allKeysMap.set(80, {character: 'P', pressed: false, color: "purple"});
+allKeysMap.set(65, {character: 'A', pressed: false, color: "purple"});
+allKeysMap.set(83, {character: 'S', pressed: false, color: "purple"});
+allKeysMap.set(68, {character: 'D', pressed: false, color: "purple"});
+allKeysMap.set(70, {character: 'F', pressed: false, color: "purple"});
+allKeysMap.set(71, {character: 'G', pressed: false, color: "pink"});
+allKeysMap.set(72, {character: 'H', pressed: false, color: "pink"});
+allKeysMap.set(74, {character: 'J', pressed: false, color: "pink"});
+allKeysMap.set(75, {character: 'K', pressed: false, color: "pink"});
+allKeysMap.set(76, {character: 'L', pressed: false, color: "pink"});
+allKeysMap.set(90, {character: 'Z', pressed: false, color: "pink"});
+allKeysMap.set(88, {character: 'X', pressed: false, color: "orange"});
+allKeysMap.set(67, {character: 'C', pressed: false, color: "orange"});
+allKeysMap.set(86, {character: 'V', pressed: false, color: "orange"});
+allKeysMap.set(66, {character: 'B', pressed: false, color: "orange"});
+allKeysMap.set(78, {character: 'N', pressed: false, color: "orange"});
+allKeysMap.set(77, {character: 'M', pressed: false, color: "orange"});
+
 const pianoKeys = [81, 50, 87, 51, 69, 82, 53, 84, 54, 89, 55, 85, 73, 57, 79, 48, 80, 90, 83, 88, 68, 67, 70, 86, 66, 72, 78, 74, 77];
 
 function App() {
@@ -78,50 +79,37 @@ function App() {
     var temp = 0;
     var pianoHolder = document.querySelector(".piano");
     var launchpad = document.querySelector(".launchpad");
-    var numberPerRow = 8;
     
-
-    for (var i = 0; i < Object.keys(allKeys).length / numberPerRow; i++){
-      var newRow = document.createElement("div");
-      newRow.classList.add("row");
-
-      var start = numberPerRow * i;
-      var rowCount = Math.floor(Object.keys(allKeys).length / numberPerRow);
-      var end = (i === rowCount - 1 ? start + (Object.keys(allKeys).length - 1) % numberPerRow : start + (numberPerRow - 1));
-      console.log(start, end);
-
-    }
-
-    for (var e in allKeys) {
+    for (var [key, value] of allKeysMap) {
       var newKey = document.createElement("div");
-      newKey.innerText = allKeys[e].character;
-      newKey.classList.add("launchpad-button");
+      newKey.innerText = value.character;
+      newKey.classList.add("button");
+      newKey.classList.add(value.color);
       launchpad.appendChild(newKey);
-
     }
 
     pianoKeys.forEach((e, i) => {
       var newKey = document.createElement("div");
       var newText = document.createElement("span");
 
-      newText.innerText = allKeys[e].character;
+      newText.innerText = allKeysMap.get(e).character;
       newKey.appendChild(newText);
   
       if (i % 12 === 1 || i % 12 === 3 || i % 12 === 6 || i % 12 === 8 || i % 12 === 10){
-        allSharps.push(allKeys[e].character);
+        allSharps.push(allKeysMap.get(e).character);
         newKey.classList.add("black-key");
-        allKeys[e].keyPos = temp;
+        allKeysMap.get(e).keyPos = temp;
       } else {
         newKey.classList.add("white-key");
-        allKeys[e].keyPos = temp++;
+        allKeysMap.get(e).keyPos = temp++;
       }
 
       pianoHolder.appendChild(newKey);
-      allKeys[e].pianoKey = newKey;
+      allKeysMap.get(e).pianoKey = newKey;
 
       var audioFile = require("./notes/note" + (i+1) + ".wav");
       var pianoAudio = new Audio(audioFile);
-      allKeys[e].pianoAudio = pianoAudio;
+      allKeysMap.get(e).pianoAudio = pianoAudio;
 
       newKey.addEventListener("mousedown", () => {
         newKey.classList.add("pressed");
@@ -170,13 +158,13 @@ function App() {
 
       }
 
-      if (allKeys[e.keyCode] && typeof allKeys[e.keyCode].pianoKey !== "undefined" && tempMode === "piano" && allKeys[e.keyCode].pressed === false) {
+      if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).pianoKey !== "undefined" && tempMode === "piano" && allKeysMap.get(e.keyCode).pressed === false) {
 
         //console.log("Down: " + e.keyCode); 
-        allKeys[e.keyCode].pressed = true;
-        allKeys[e.keyCode].pianoKey.classList.add("pressed"); 
-        allKeys[e.keyCode].pianoAudio.currentTime = 0; 
-        allKeys[e.keyCode].pianoAudio.play();
+        allKeysMap.get(e.keyCode).pressed = true;
+        allKeysMap.get(e.keyCode).pianoKey.classList.add("pressed"); 
+        allKeysMap.get(e.keyCode).pianoAudio.currentTime = 0; 
+        allKeysMap.get(e.keyCode).pianoAudio.play();
 
         if (startTime === 0){ tempPressed[e.keyCode] = {delay: 0, length: 0}; startTime = new Date(); } 
         else { tempPressed[e.keyCode] = {delay: Math.floor(Math.abs(startTime - new Date()) / 1000 * 100) / 100, length: 0}; }
@@ -187,14 +175,14 @@ function App() {
 
     document.addEventListener("keyup", (e) => {
       if (e.repeat) return; 
-      if (allKeys[e.keyCode] && typeof allKeys[e.keyCode].pianoKey !== "undefined" && tempMode === "piano" && allKeys[e.keyCode].pressed === true) {
+      if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).pianoKey !== "undefined" && tempMode === "piano" && allKeysMap.get(e.keyCode).pressed === true) {
         //console.log("Up: " + e.keyCode); 
-        allKeys[e.keyCode].pressed = false;
+        allKeysMap.get(e.keyCode).pressed = false;
         tempPressed[e.keyCode].length = Math.floor(Math.abs(startTime - new Date()) / 1000 * 100) / 100 - tempPressed[e.keyCode].delay;
         keyPressed.push({note: String.fromCharCode(e.keyCode), delay: tempPressed[e.keyCode].delay, length: tempPressed[e.keyCode].length});
         delete tempPressed[e.keyCode];
         console.log(keyPressed);
-        allKeys[e.keyCode].pianoKey.classList.remove("pressed");
+        allKeysMap.get(e.keyCode).pianoKey.classList.remove("pressed");
       }
     });
 
@@ -204,8 +192,8 @@ function App() {
     window.addEventListener("blur", () => {
       mouseDown = false;
       pianoKeys.forEach((e) => {
-        allKeys[e].pianoKey.classList.remove("pressed");
-        allKeys[e].pressed = false;
+        allKeysMap.get(e).pianoKey.classList.remove("pressed");
+        allKeysMap.get(e).pressed = false;
       });
     });
 
@@ -247,9 +235,9 @@ function App() {
 
         if (allSharps.includes(e.note)) {
             newElement.classList.add("sharp-flat");
-            newElement.style.left = `${allKeys[keycode].keyPos * normalWidth - (sharpWidth/2)}px`;   
+            newElement.style.left = `${allKeysMap.get(keycode).keyPos * normalWidth - (sharpWidth/2)}px`;   
         } else {
-          newElement.style.left= `${allKeys[keycode].keyPos * normalWidth}px`;    
+          newElement.style.left= `${allKeysMap.get(keycode).keyPos * normalWidth}px`;    
         }    
 
         pianoNotes.current.appendChild(newElement);
@@ -335,7 +323,6 @@ function App() {
 
       <div className={`page${mode === "preset" ? " visible" : ""}`}>
         <div className="launchpad">
-          <div className="launchpad-button">D</div>
         </div>
       </div>
 
