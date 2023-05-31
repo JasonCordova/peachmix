@@ -81,12 +81,56 @@ function App() {
     var launchpad = document.querySelector(".launchpad");
     
     for (var [key, value] of allKeysMap) {
-      var newKey = document.createElement("div");
-      newKey.innerText = value.character;
-      newKey.classList.add("button");
-      newKey.classList.add(value.color);
-      launchpad.appendChild(newKey);
+
+      var newButton = document.createElement("div");
+
+      var newSpan = document.createElement("span");
+      newSpan.innerText = value.character;
+      newButton.appendChild(newSpan);
+
+      newButton.classList.add("button");
+      newButton.classList.add(value.color);
+      launchpad.appendChild(newButton);
+
+      /*
+      var audioFile = require("./notes/note" + (i+1) + ".wav");
+      var presetAudio = new Audio(audioFile);
+      allKeysMap.get(e).presetAudio = presetAudio;
+      */
+
+      newButton.addEventListener("mousedown", () => {
+        console.log(newButton);
+      });
+
+      /*
+      newButton.addEventListener("mousedown", () => {
+        newButton.classList.add("pressed");
+        //presetAudio.currentTime = 0;
+        //presetAudio.play();
+      });
+
+      newButton.addEventListener("mouseup", () => {
+        newButton.classList.remove("pressed");
+      });
+
+      newButton.addEventListener("mouseenter", () => {
+        if (mouseDown === true){
+          newButton.classList.add("pressed");
+          //presetAudio.currentTime = 0;
+          //presetAudio.play();
+        }
+      });
+
+      newButton.addEventListener("mouseout", () => {
+        if (newButton.classList.contains("pressed")){
+        newButton.classList.remove("pressed");
+        }
+      });
+      */
+
     }
+
+    console.log(allKeysMap);
 
     pianoKeys.forEach((e, i) => {
       var newKey = document.createElement("div");

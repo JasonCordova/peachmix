@@ -42,12 +42,16 @@ body {
   --regular-note-width: 50px;
   --sharp-flat-note-width: 30px;
 
+  --launchpad-color: #232323;
+  --launchpad-button: #eaeff5;
+  --launchpad-button-hover: #afb0b3;
+
   --blue: #0994FF;
   --red: #FF3838;
-  --green: #00CB7A;
-  --purple: #A100FF;
+  --green: #00AF4F;
+  --purple: #6000ff;
   --pink: #FF38D1;
-  --orange: #FFBA44;
+  --orange: #FF7A1F;
 
 }
 
@@ -476,27 +480,26 @@ body {
 
 .launchpad {
   background-color: #232323;
-  padding: 1em;
+  padding: 16px;
   border-radius: 1em;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 12px;
-  width: 444px;
+  gap: 10px;
+  width: 434px;
   position: relative;
 }
 
 .launchpad::after {
   content: "";
   display: block;
-  width: 64px;
-  height: 64px;
-  border-radius: 100%;
+  width: 44px;
+  height: 44px;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) rotate(45deg);
   position: absolute;
-  background-color: #232323;
+  background-color: var(--launchpad-color);
 }
 
 .launchpad .button {
@@ -504,19 +507,37 @@ body {
   height: 64px;
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  color: white;
+  justify-content: flex-end;
+  align-items: flex-end;
+  background-color: var(--launchpad-button);
+  color: #00000063;
   font-family: inherit;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1.1em;
-  border-radius: 0.5em;
+  border-radius: 6px;
+  -webkit-user-select: none;
   user-select: none;
   cursor: pointer;
+  padding: 10px 12px;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  box-shadow: -6px -6px 12px rgb(0 0 0 / 8%) inset, 3px 3px 12px rgb(255 255 255 / 15%) inset, 0px 0px 6px 1px rgb(0 0 0 / 55%);
+  transition: background-color var(--key-transition) ease-out, color var(--key-transition) ease-out;
 }
-.launchpad .button.blue {background-color: var(--blue);}
-.launchpad .button.red {background-color: var(--red);}
-.launchpad .button.green {background-color: var(--green);}
-.launchpad .button.purple {background-color: var(--purple);}
-.launchpad .button.pink {background-color: var(--pink);}
-.launchpad .button.orange {background-color: var(--orange);}
+
+
+.launchpad .button:hover {
+  background-color: var(--launchpad-button-hover);
+}
+
+
+.launchpad span {position: relative; z-index: 1;}
+
+.launchpad .button.pressed {color: white}
+.launchpad .button.pressed.blue {background-color: var(--blue);}
+.launchpad .button.pressed.red {background-color: var(--red);}
+.launchpad .button.pressed.green {background-color: var(--green);}
+.launchpad .button.pressed.purple {background-color: var(--purple);}
+.launchpad .button.pressed.pink {background-color: var(--pink);}
+.launchpad .button.pressed.orange {background-color: var(--orange);}
