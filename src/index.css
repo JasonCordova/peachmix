@@ -193,11 +193,13 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  pointer-events: none;
 }
 
 .page.visible {
   top: 0%;
   opacity: 1;
+  pointer-events: initial;
 }
 
 .key-tube {
@@ -486,13 +488,11 @@ body {
   flex-direction: row;
   flex-wrap: wrap;
   gap: 10px;
-  width: 434px;
+  width: 398px;
   position: relative;
 }
 
-.launchpad::after {
-  content: "";
-  display: block;
+.launchpad-logo {
   width: 44px;
   height: 44px;
   top: 50%;
@@ -500,11 +500,22 @@ body {
   transform: translate(-50%, -50%) rotate(45deg);
   position: absolute;
   background-color: var(--launchpad-color);
+  display: flex;
+  flex-direction: row;
+  z-index: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.launchpad-logo svg {
+  fill: white;
+  transform: rotate(-45deg);
+  height: 60%;
 }
 
 .launchpad .button {
-  width: 64px;
-  height: 64px;
+  width: 58px;
+  height: 58px;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -523,7 +534,7 @@ body {
   overflow: hidden;
   position: relative;
   box-shadow: -6px -6px 12px rgb(0 0 0 / 8%) inset, 3px 3px 12px rgb(255 255 255 / 15%) inset, 0px 0px 6px 1px rgb(0 0 0 / 55%);
-  transition: background-color var(--key-transition) ease-out, color var(--key-transition) ease-out;
+  transition: background-color 0.05s ease-in, color 0.05s ease-in;
 }
 
 
@@ -532,7 +543,7 @@ body {
 }
 
 
-.launchpad span {position: relative; z-index: 1;}
+.launchpad span {position: relative; z-index: 1; pointer-events: none;}
 
 .launchpad .button.pressed {color: white}
 .launchpad .button.pressed.blue {background-color: var(--blue);}

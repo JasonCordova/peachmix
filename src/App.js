@@ -3,6 +3,9 @@ import animation from './animation.js';
 import { fClamp, fLerp } from './functions.js';
 import songs from './songs.js';
 
+
+const logo = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M10 2C15.27.5 23.33.12 27.89 3.65c1.86 1.44 4.29 4.39 3.43 6.93-.89 2.62-5.01 3.15-7.32 2.8C17.64 12.43 12.89 7.37 10 2Zm25 10c6.05 0 10.91-.74 15.96 3.39C63.5 25.64 60.44 48.11 46 55c4.12-12.59 4.98-26.19-4.33-36.96L35 12Zm-19 2.11c4.85-.16 5.23 1.28 9 1.41 5.15.17 8.97-4.14 15.47 3.57C49.53 29.84 50.92 60 33 62.79 17.71 65.17-1.18 44.85 7.26 24c1.97-4.87 3.89-7.71 8.74-9.89Z"/></svg>;
+
 const upload = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 221 215"><path d="M95 58 69 85c-2.76 2.76-10.01 10.5-13 12.12-2.16.93-4.75.99-7 0C44.23 95.47 34.24 85.11 33.28 80c-1.08-5.72 3.22-10.14 6.81-14l16.87-17L67 38l26-27c5.68-5.67 9.34-10.2 18-9.94 9.11.27 15.11 7.92 20.99 13.94L171 56c4.41 4.41 15.49 14.23 16.7 20 1.71 8.22-13.4 24.34-21.7 21.4-3.95-1.4-15.37-13.75-19-17.4l-21-22v78c-.01 3.19.29 6.97-1.89 9.57-4 4.78-23.22 4.78-27.22 0-2.18-2.6-1.88-6.38-1.89-9.57V58ZM6.02 132.74c4.52-1.11 9.33-.8 13.98-.74 21.08.29 7.18 27.05 13.69 40 4.6 9.15 13.2 9.99 22.31 10h109c4.08-.01 6.97-.03 11-1.04 16.76-4.23 12.85-22.91 13-35.96.05-3.9.17-7.72 3.28-10.57 3.62-3.32 11.94-2.49 16.72-2.43 11.07.16 11.99 5.4 12 15v21c0 14.26.97 25.96-10.04 36.96-3.32 3.33-6.48 5.74-10.96 7.28-4.84 1.67-8 1.75-13 1.76H34c-4.75-.01-7.35-.02-12-1.44C-1.94 205.22 0 180.82 0 161c0-5.25-.78-19.93 1.31-23.96 1.34-2.57 2.35-2.98 4.71-4.3Z"/></svg>;
 const piano = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1064 1064"><path d="M24 1.07h1002c12.32-.07 19.6-.9 28.91 8.95 3.26 3.44 5.25 6.43 6.65 10.98 1.42 4.65 1.43 7.25 1.44 12v999c-.09 19.13-11.91 30.97-31 31H38c-12.32 0-19.6.83-28.91-9.02-3.26-3.44-5.25-6.43-6.65-10.98-1.42-4.65-1.43-7.25-1.44-12V41C1 28.6-.21 19.85 9.09 10.02 13.84 4.99 17.37 3.04 24 1.07ZM193 60H60v944h192V665h-26c-21.95-.03-32.97-16.37-33-37V60Zm250 0h-73v565c-.03 20.4-8.95 39.89-32 40h-27v339h191V665h-25c-5.3-.01-10.08-.27-15-2.55-15.2-7.06-18.98-26.39-19-41.45V60Zm251 0h-73v561c-.03 21.17-6.76 43.88-32 44h-27v339h191V665h-26c-23.77-.04-32.97-18.62-33-40V60Zm310 0H871v568c-.02 13.59-6.29 30.21-20 35.44-4.09 1.56-7.72 1.55-12 1.56h-27v339h192V60Z"/></svg>;
 const preset = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 278 216"><path d="M142 .66c7.31-1.17 11.15 2.22 12.75 9.34v189c.25 2.57.33 5.51 0 8-.61 1.34-1.12 2.77-1.84 3.96-6.51 10.75-16.8 1.51-22.91-3.91l-43-37.2c-3.71-3.27-12.81-11.93-17-13.29-2.05-.67-4.83-.56-7-.56H25c-4.57 0-14.18.6-17.98-1.31C.96 151.65 1.01 146.86 1 141V74c.02-12.14 4.08-14.94 16-15h47c2.12 0 5 .09 7-.51 4.55-1.36 13.95-10.59 18-14.07l33-28.55C127.65 11 135.28 3.42 142 .66Zm88.99.92c8.14-1.1 10.99 3.31 15.29 9.42C252.14 19.33 259 30.66 263 40c19.36 45.18 19.15 94.05-.86 139-3.26 7.33-15.69 28.99-21.31 33.57-6.91 5.63-17.91.94-16.59-8.57.62-4.48 6.11-11 8.76-15 5.59-8.44 10.53-17.55 14.19-27 15.9-41.05 13.16-87.79-9.2-126l-7-11c-5.35-7.74-13.44-18.1 0-23.42Zm-25.99 26c8.01-1.03 10.67 3.34 14.66 9.42 5.79 8.83 9.01 15.11 12.66 25 12.18 33.03 11.37 65.44-1.92 98-2.76 6.74-7.34 14.94-11.4 21-2.38 3.54-4.51 6.84-9 7.72-7.98 1.56-13.63-5.05-11.35-12.72 1.11-3.77 5.34-9.27 7.48-13 3.8-6.66 6.93-13.73 9.36-21 10.65-32 5.29-65.98-13.16-94-5.03-7.65-8.57-15.98 2.67-20.42Zm-28 28.11c10.33-1.27 14.74 10.4 18.13 18.31 8.6 20.1 8.8 45.63 1.06 66-2.88 7.57-8.05 22.29-18.19 20.76-6.86-1.04-9.09-7.73-7.36-13.76l5.74-12c3.13-7.44 5.89-19.95 5.58-28-.33-8.45-2.98-19.28-6.4-27l-5.91-12c-1.63-6.23 1.93-10.1 7.35-12.31Z"/></svg>;
@@ -24,6 +27,19 @@ const allSharps = [];
 
 var mouseDown = false;
 var tempMode = "menu";
+
+const printNotes = () => {
+
+  var string = "";
+
+  keyPressed.forEach((e, i) => {
+    string += `{ note: '${e.note}', delay: '${e.delay}', length: '${Math.floor(e.length * 100) / 100}'},`;
+    string += "\n";
+  });
+
+  console.log(string);
+  console.log("-----------------------------------");
+}
 
 var allKeysMap = new Map();
 allKeysMap.set(49, {character: '1', pressed: false, color: "blue"});
@@ -76,59 +92,55 @@ function App() {
 
   const init = () => {
 
+    console.log("init");
+
     var temp = 0;
     var pianoHolder = document.querySelector(".piano");
     var launchpad = document.querySelector(".launchpad");
-    
+
+
     for (var [key, value] of allKeysMap) {
-
       var newButton = document.createElement("div");
-
       var newSpan = document.createElement("span");
       newSpan.innerText = value.character;
       newButton.appendChild(newSpan);
-
       newButton.classList.add("button");
       newButton.classList.add(value.color);
       launchpad.appendChild(newButton);
+      value.presetKey = newButton;
 
-      /*
-      var audioFile = require("./notes/note" + (i+1) + ".wav");
-      var presetAudio = new Audio(audioFile);
-      allKeysMap.get(e).presetAudio = presetAudio;
-      */
+      // Small little bug regarding Maps that send a pointer to the last button whenever attempting to make new eventListeners,
+      // Instead, pay attention to the next forEach loop, since all eventListeners are made there.
 
-      newButton.addEventListener("mousedown", () => {
-        console.log(newButton);
+    }
+
+    allKeysMap.forEach((e, i) => {
+
+      e.presetKey.addEventListener("mousedown", () => {
+        e.presetKey.classList.add("pressed");
       });
 
-      /*
-      newButton.addEventListener("mousedown", () => {
-        newButton.classList.add("pressed");
-        //presetAudio.currentTime = 0;
-        //presetAudio.play();
+      e.presetKey.addEventListener("mouseup", () => {
+        e.presetKey.classList.remove("pressed");
       });
 
-      newButton.addEventListener("mouseup", () => {
-        newButton.classList.remove("pressed");
-      });
-
-      newButton.addEventListener("mouseenter", () => {
+      e.presetKey.addEventListener("mouseenter", () => {
         if (mouseDown === true){
-          newButton.classList.add("pressed");
+          e.presetKey.classList.add("pressed");
           //presetAudio.currentTime = 0;
           //presetAudio.play();
         }
       });
 
-      newButton.addEventListener("mouseout", () => {
-        if (newButton.classList.contains("pressed")){
-        newButton.classList.remove("pressed");
+      e.presetKey.addEventListener("mouseout", () => {
+        if (e.presetKey.classList.contains("pressed")){
+        e.presetKey.classList.remove("pressed");
         }
       });
-      */
 
-    }
+    });
+
+    
 
     console.log(allKeysMap);
 
@@ -151,7 +163,7 @@ function App() {
       pianoHolder.appendChild(newKey);
       allKeysMap.get(e).pianoKey = newKey;
 
-      var audioFile = require("./notes/note" + (i+1) + ".wav");
+      var audioFile = require("./oggNotes/note" + (i+1) + ".ogg");
       var pianoAudio = new Audio(audioFile);
       allKeysMap.get(e).pianoAudio = pianoAudio;
 
@@ -202,9 +214,17 @@ function App() {
 
       }
 
-      if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).pianoKey !== "undefined" && tempMode === "piano" && allKeysMap.get(e.keyCode).pressed === false) {
+      // PRESET MODE
 
-        //console.log("Down: " + e.keyCode); 
+      if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).presetKey !== "undefined" && tempMode === "preset" && allKeysMap.get(e.keyCode).pressed === false) {
+        allKeysMap.get(e.keyCode).pressed = true;
+        allKeysMap.get(e.keyCode).presetKey.classList.add("pressed"); 
+        //allKeysMap.get(e.keyCode).pianoAudio.currentTime = 0; 
+        //allKeysMap.get(e.keyCode).pianoAudio.play();
+      }
+
+      // PIANO KEYS
+      if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).pianoKey !== "undefined" && tempMode === "piano" && allKeysMap.get(e.keyCode).pressed === false) {
         allKeysMap.get(e.keyCode).pressed = true;
         allKeysMap.get(e.keyCode).pianoKey.classList.add("pressed"); 
         allKeysMap.get(e.keyCode).pianoAudio.currentTime = 0; 
@@ -212,7 +232,6 @@ function App() {
 
         if (startTime === 0){ tempPressed[e.keyCode] = {delay: 0, length: 0}; startTime = new Date(); } 
         else { tempPressed[e.keyCode] = {delay: Math.floor(Math.abs(startTime - new Date()) / 1000 * 100) / 100, length: 0}; }
-
       }
 
     });
@@ -225,9 +244,16 @@ function App() {
         tempPressed[e.keyCode].length = Math.floor(Math.abs(startTime - new Date()) / 1000 * 100) / 100 - tempPressed[e.keyCode].delay;
         keyPressed.push({note: String.fromCharCode(e.keyCode), delay: tempPressed[e.keyCode].delay, length: tempPressed[e.keyCode].length});
         delete tempPressed[e.keyCode];
-        console.log(keyPressed);
+        printNotes();
         allKeysMap.get(e.keyCode).pianoKey.classList.remove("pressed");
       }
+
+      if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).presetKey !== "undefined" && tempMode === "preset" && allKeysMap.get(e.keyCode).pressed === true) {
+        //console.log("Up: " + e.keyCode); 
+        allKeysMap.get(e.keyCode).pressed = false;
+        allKeysMap.get(e.keyCode).presetKey.classList.remove("pressed");
+      }
+
     });
 
     document.addEventListener("mousedown", () => {mouseDown = true});
@@ -236,6 +262,7 @@ function App() {
     window.addEventListener("blur", () => {
       mouseDown = false;
       pianoKeys.forEach((e) => {
+        allKeysMap.get(e).presetKey.classList.remove("pressed");
         allKeysMap.get(e).pianoKey.classList.remove("pressed");
         allKeysMap.get(e).pressed = false;
       });
@@ -367,6 +394,7 @@ function App() {
 
       <div className={`page${mode === "preset" ? " visible" : ""}`}>
         <div className="launchpad">
+          <div className="launchpad-logo">{logo}</div>
         </div>
       </div>
 
@@ -386,9 +414,9 @@ function App() {
             <div className="song-artist">{song !== null ? song.artist : ""}</div>
           </div>
 
-          <div className={`theme-button${song !== null ? " hidden" : ""}`}>
+          <div onClick={() => {setSong(songs[Math.floor(Math.random() * songs.length)]);}} className={`theme-button${song !== null ? " hidden" : ""}`}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 470 646"><path d="M180 444V24c0-3.15-.1-5.93.79-9C184.13 3.45 195.86-2.13 207 1.96c5.74 2.11 17.43 10.9 23 14.7l43 30.22C324.29 84.7 383.7 129.89 425.13 178c23.69 27.51 45.31 58.27 44.87 96-.12 9.59-2.35 22.7-4.85 32-9.94 36.93-30.22 62.26-60.15 85.58-9.71 7.56-30.52 23.48-43 22.32-9.69-.9-17.82-10.24-17.82-19.9 0-6.62 5.42-15.1 7.63-22 4.47-13.99 5.03-24.65 1.98-39-7.15-33.64-36.3-70.04-61.79-92-8.18-7.05-22.48-18.36-32-23v324c-.06 40.87-27.9 71.98-63 89.24-44.26 21.77-102.65 19.35-145-5.84C23.41 608.39.41 578.39 0 544v-6c.13-10.62 2.97-22.28 7.15-32 27.38-63.74 112.04-82.26 172.85-62Z"/></svg>
-            <span onClick={() => {setSong(songs[Math.floor(Math.random() * songs.length)]);}}>Play a song</span>
+            <span>Play a song</span>
           </div>
 
         </div>
