@@ -4,6 +4,7 @@ import songs from './songs.js';
 
 
 const logo = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M10 2C15.27.5 23.33.12 27.89 3.65c1.86 1.44 4.29 4.39 3.43 6.93-.89 2.62-5.01 3.15-7.32 2.8C17.64 12.43 12.89 7.37 10 2Zm25 10c6.05 0 10.91-.74 15.96 3.39C63.5 25.64 60.44 48.11 46 55c4.12-12.59 4.98-26.19-4.33-36.96L35 12Zm-19 2.11c4.85-.16 5.23 1.28 9 1.41 5.15.17 8.97-4.14 15.47 3.57C49.53 29.84 50.92 60 33 62.79 17.71 65.17-1.18 44.85 7.26 24c1.97-4.87 3.89-7.71 8.74-9.89Z"/></svg>;
+//const searchIcon = <svg xmlns="http://www.w3.org/2000/svg"><path d="M23.029 23.621 34 34ZM2 14.109C2 7.421 7.731 2 14.8 2s12.8 5.421 12.8 12.109-5.731 12.109-12.8 12.109S2 20.795 2 14.109Z" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/></svg>
 
 const upload = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 221 215"><path d="M95 58 69 85c-2.76 2.76-10.01 10.5-13 12.12-2.16.93-4.75.99-7 0C44.23 95.47 34.24 85.11 33.28 80c-1.08-5.72 3.22-10.14 6.81-14l16.87-17L67 38l26-27c5.68-5.67 9.34-10.2 18-9.94 9.11.27 15.11 7.92 20.99 13.94L171 56c4.41 4.41 15.49 14.23 16.7 20 1.71 8.22-13.4 24.34-21.7 21.4-3.95-1.4-15.37-13.75-19-17.4l-21-22v78c-.01 3.19.29 6.97-1.89 9.57-4 4.78-23.22 4.78-27.22 0-2.18-2.6-1.88-6.38-1.89-9.57V58ZM6.02 132.74c4.52-1.11 9.33-.8 13.98-.74 21.08.29 7.18 27.05 13.69 40 4.6 9.15 13.2 9.99 22.31 10h109c4.08-.01 6.97-.03 11-1.04 16.76-4.23 12.85-22.91 13-35.96.05-3.9.17-7.72 3.28-10.57 3.62-3.32 11.94-2.49 16.72-2.43 11.07.16 11.99 5.4 12 15v21c0 14.26.97 25.96-10.04 36.96-3.32 3.33-6.48 5.74-10.96 7.28-4.84 1.67-8 1.75-13 1.76H34c-4.75-.01-7.35-.02-12-1.44C-1.94 205.22 0 180.82 0 161c0-5.25-.78-19.93 1.31-23.96 1.34-2.57 2.35-2.98 4.71-4.3Z"/></svg>;
 const piano = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1064 1064"><path d="M24 1.07h1002c12.32-.07 19.6-.9 28.91 8.95 3.26 3.44 5.25 6.43 6.65 10.98 1.42 4.65 1.43 7.25 1.44 12v999c-.09 19.13-11.91 30.97-31 31H38c-12.32 0-19.6.83-28.91-9.02-3.26-3.44-5.25-6.43-6.65-10.98-1.42-4.65-1.43-7.25-1.44-12V41C1 28.6-.21 19.85 9.09 10.02 13.84 4.99 17.37 3.04 24 1.07ZM193 60H60v944h192V665h-26c-21.95-.03-32.97-16.37-33-37V60Zm250 0h-73v565c-.03 20.4-8.95 39.89-32 40h-27v339h191V665h-25c-5.3-.01-10.08-.27-15-2.55-15.2-7.06-18.98-26.39-19-41.45V60Zm251 0h-73v561c-.03 21.17-6.76 43.88-32 44h-27v339h191V665h-26c-23.77-.04-32.97-18.62-33-40V60Zm310 0H871v568c-.02 13.59-6.29 30.21-20 35.44-4.09 1.56-7.72 1.55-12 1.56h-27v339h192V60Z"/></svg>;
@@ -14,12 +15,11 @@ var sharpWidth = 30;    // Sharp piano width (px)
 var normalWidth = 50;   // Normal piano width (px)
 
 var startTime = null;    
-var songStart = null;
 var maxPlayingSpeed = 1.5;
 var playingSpeed = maxPlayingSpeed;   // Playback piano song speed (Integer)
 
-var tempPressed = {};
-var keyPressed = [];
+//var tempPressed = {};
+//var keyPressed = [];
 
 var tick = 200;
 var playingSong = false;
@@ -33,12 +33,14 @@ var playerX, playerY, velX = 1, velY = 0;
 
 const printNotes = () => {
 
+  /*
   var string = "";
 
   keyPressed.forEach((e, i) => {
     string += `{ note: '${e.note}', delay: '${e.delay}', length: '${Math.floor(e.length * 100) / 100}'},`;
     string += "\n";
   });
+  */
 
 }
 
@@ -84,7 +86,7 @@ allKeysMap.set(77, {character: 'M', preset: true, pressed: false, color: "orange
 allKeysMap.set(188, {character: ',', preset: false, pressed: false, color: "orange"});
 allKeysMap.set(190, {character: '.', preset: false, pressed: false, color: "orange"});
 allKeysMap.set(186, {character: ';', preset: false, pressed: false, color: "orange"});
-allKeysMap.set(191, {character: '?', preset: false, pressed: false, color: "orange"});
+allKeysMap.set(191, {character: '/', preset: false, pressed: false, color: "orange"});
 allKeysMap.set(222, {character: '\'', preset: false, pressed: false, color: "orange"});
 
 const pianoKeys = [81, 50, 87, 51, 69, 82, 53, 84, 54, 89, 55, 85, 73, 57, 79, 48, 80, 90, 83, 88, 68, 67, 70, 86, 66, 72, 78, 74, 77, 188, 76, 190, 186, 191, 222];
@@ -96,6 +98,11 @@ function App() {
   const [playSnake, setPlaySnake] = useState(false);
   const pianoNotes = useRef();
   const setMode = (temp) => {setSong(null); changeMode(temp); tempMode = temp;}
+
+  var searchBar = document.querySelector(".searchbar");
+  var actualPiano = document.querySelector(".piano");
+  var searchResults = document.querySelector(".search-results");
+  const searchIcon = <svg className="search-icon" onClick={() => {searchBar.focus();}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><path d="m22.79 23.32 10.85 10.25-10.85-10.25ZM1.98 13.93c0-6.6 5.67-11.96 12.66-11.96 7 0 12.67 5.36 12.67 11.96 0 6.6-5.67 11.95-12.67 11.95-6.99 0-12.66-5.35-12.66-11.95Z" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4"/></svg>;
 
   /* ------------------------ INITIALIZATION FUNCTION ------------------------ */
 
@@ -213,7 +220,6 @@ function App() {
 
     });
 
-    console.log("hello");
     var lastKey = document.createElement("div");
     lastKey.classList.add("white-key");
     pianoHolder.appendChild(lastKey);
@@ -365,7 +371,7 @@ function App() {
       song.notes.forEach((e, i) => {
 
         // Simple function to find out the note that we end on, based off length and duration.
-        var keycode = e.note.charCodeAt(0);
+        var keycode = e.note;
         var index = pianoKeys.indexOf(keycode);
         if (index === -1) return;
         if ((parseFloat(e.length) + parseFloat(e.delay)) > (parseFloat(longestNote.length) + parseFloat(longestNote.delay))) longestNote = e;
@@ -373,11 +379,11 @@ function App() {
         // While searching for the longest note, we make them and put them on the note holder.
         var newElement = document.createElement("div");
         newElement.classList.add("note");
-        newElement.innerText = e.note;
+        newElement.innerText = allKeysMap.get(e.note).character;
         newElement.style.bottom = `${e.delay * pianoUnit}px`;
         newElement.style.height = `${e.length * pianoUnit}px`;
 
-        if (allSharps.includes(e.note)) {newElement.classList.add("sharp-flat"); newElement.style.left = `${allKeysMap.get(keycode).keyPos * normalWidth - (sharpWidth/2)}px`;   
+        if (allSharps.includes(allKeysMap.get(e.note).character)) {newElement.classList.add("sharp-flat"); newElement.style.left = `${allKeysMap.get(keycode).keyPos * normalWidth - (sharpWidth/2)}px`;   
         } else {newElement.style.left= `${allKeysMap.get(keycode).keyPos * normalWidth}px`;}    
 
         pianoNotes.current.appendChild(newElement);
@@ -482,14 +488,92 @@ function App() {
           <div className="piano">
           </div>
 
+          <div className={`song-search${song !== null ? " hidden" : ""}`}>
+            <div className="searchbar-holder">
+              <input className="searchbar" placeholder="Search songs & artists" onFocus={() => {
+                searchResults.classList.remove("hidden");
+                actualPiano.classList.add("faded");
+
+                var text = searchBar.value.toUpperCase();
+                var results = [];
+                songs.forEach((song) => {
+                  if (song.title === null && song.artist !== null){if (song.artist.toUpperCase().includes(text) || text.includes(song.artist.toUpperCase())) results.push(song);}
+                  else if (song.title !== null && song.artist === null){if (song.title.toUpperCase().includes(text) || text.includes(song.title.toUpperCase())) results.push(song);}
+                  else if (song.title !== null & song.artist !== null){if (song.title.toUpperCase().includes(text) || song.artist.toUpperCase().includes(text) || text.includes(song.title.toUpperCase()) || text.includes(song.artist.toUpperCase())) results.push(song);}
+                });
+
+                searchResults.innerHTML = "";
+                
+                results.forEach((result) => {
+                  var search = document.createElement("div");
+                  var searchDetails = document.createElement("div");
+                  var searchTitle = document.createElement("div");
+                  var searchArtist = document.createElement("div");
+
+                  search.classList.add("search");
+                  searchDetails.classList.add("search-details");
+                  searchTitle.classList.add("search-title");
+                  searchArtist.classList.add("search-artist");
+
+                  searchTitle.innerText = result.title === null ? "" : result.title;
+                  searchArtist.innerText = result.artist === null ? "" : result.artist;
+
+                  searchDetails.appendChild(searchTitle);
+                  searchDetails.appendChild(searchArtist);
+                  search.appendChild(searchDetails);
+                  searchResults.append(search);
+
+                  search.addEventListener("click", () => {
+                    setSong(result);
+                  });
+
+                });
+              }} onBlur={() => {searchResults.classList.add("hidden"); actualPiano.classList.remove("faded");}} onInput={() => {
+                var text = searchBar.value.toUpperCase();
+                var results = [];
+                songs.forEach((song) => {
+                  if (song.title === null && song.artist !== null){if (song.artist.toUpperCase().includes(text) || text.includes(song.artist.toUpperCase())) results.push(song);}
+                  else if (song.title !== null && song.artist === null){if (song.title.toUpperCase().includes(text) || text.includes(song.title.toUpperCase())) results.push(song);}
+                  else if (song.title !== null & song.artist !== null){if (song.title.toUpperCase().includes(text) || song.artist.toUpperCase().includes(text) || text.includes(song.title.toUpperCase()) || text.includes(song.artist.toUpperCase())) results.push(song);}
+                });
+
+                searchResults.innerHTML = "";
+                
+                results.forEach((result) => {
+                  var search = document.createElement("div");
+                  var searchDetails = document.createElement("div");
+                  var searchTitle = document.createElement("div");
+                  var searchArtist = document.createElement("div");
+
+                  search.classList.add("search");
+                  searchDetails.classList.add("search-details");
+                  searchTitle.classList.add("search-title");
+                  searchArtist.classList.add("search-artist");
+
+                  searchTitle.innerText = result.title === null ? "" : result.title;
+                  searchArtist.innerText = result.artist === null ? "" : result.artist;
+
+                  searchDetails.appendChild(searchTitle);
+                  searchDetails.appendChild(searchArtist);
+                  search.appendChild(searchDetails);
+                  searchResults.append(search);
+
+                  search.addEventListener("click", () => {
+                    setSong(result);
+                  });
+
+                });
+
+              }}></input>
+              {searchIcon}
+            </div>
+            <div className="search-results hidden">
+            </div>
+          </div>
+
           <div className={`song-details${song !== null ? " visible" : ""}`}>
             <div className="song-title">{song !== null ? song.title : `Restarting...`}</div>
             <div className="song-artist">{song !== null ? song.artist : ""}</div>
-          </div>
-
-          <div onClick={() => {setSong(songs[Math.floor(Math.random() * songs.length)]);}} className={`theme-button${song !== null ? " hidden" : ""}`}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 470 646"><path d="M180 444V24c0-3.15-.1-5.93.79-9C184.13 3.45 195.86-2.13 207 1.96c5.74 2.11 17.43 10.9 23 14.7l43 30.22C324.29 84.7 383.7 129.89 425.13 178c23.69 27.51 45.31 58.27 44.87 96-.12 9.59-2.35 22.7-4.85 32-9.94 36.93-30.22 62.26-60.15 85.58-9.71 7.56-30.52 23.48-43 22.32-9.69-.9-17.82-10.24-17.82-19.9 0-6.62 5.42-15.1 7.63-22 4.47-13.99 5.03-24.65 1.98-39-7.15-33.64-36.3-70.04-61.79-92-8.18-7.05-22.48-18.36-32-23v324c-.06 40.87-27.9 71.98-63 89.24-44.26 21.77-102.65 19.35-145-5.84C23.41 608.39.41 578.39 0 544v-6c.13-10.62 2.97-22.28 7.15-32 27.38-63.74 112.04-82.26 172.85-62Z"/></svg>
-            <span>Play a song</span>
           </div>
 
         </div>
