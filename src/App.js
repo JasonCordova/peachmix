@@ -261,7 +261,7 @@ function App() {
       else if (e.keyCode === 40) {velX = 0; velY = 1;}
 
       // PIANO KEYS
-      if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).pianoKey !== "undefined" && tempMode === "piano" && allKeysMap.get(e.keyCode).pressed === false) {
+      if (!document.activeElement.classList.contains("searchbar") && allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).pianoKey !== "undefined" && tempMode === "piano" && allKeysMap.get(e.keyCode).pressed === false) {
         allKeysMap.get(e.keyCode).pressed = true;
         allKeysMap.get(e.keyCode).pianoKey.classList.add("pressed"); 
         allKeysMap.get(e.keyCode).pianoAudio.currentTime = 0; 
