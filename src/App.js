@@ -129,7 +129,7 @@ function App() {
       if (temp % 6 === 0 && temp !== 0) {snakeMap.push(tempRow); tempRow = [];}
       tempRow.push(value.presetKey);
 
-      var audioFile = require("./SoundPresets/JoeyTrap/note" + ((temp++ % 9) + 1) + ".ogg");
+      var audioFile = require("./SoundPresets/JoeyTrap/note" + ((temp++ % 12) + 1) + ".ogg");
       var presetAudio = new Audio(audioFile);
       value.presetAudio = presetAudio;
 
