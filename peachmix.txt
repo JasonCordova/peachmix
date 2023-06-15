@@ -1,0 +1,2 @@
+Implement when you hit right / wrong note
+Implement different instrument (when done)

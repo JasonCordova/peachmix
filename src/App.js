@@ -14,14 +14,16 @@ var pianoUnit = 128;    // Piano Height (px) per 1 second
 var sharpWidth = 30;    // Sharp piano width (px)
 var normalWidth = 50;   // Normal piano width (px)
 
+var pianoVolume = 1;
+
 var startTime = null;    
-var maxPlayingSpeed = 1.5;
+var maxPlayingSpeed = 2.05;
 var playingSpeed = maxPlayingSpeed;   // Playback piano song speed (Integer)
 
 //var tempPressed = {};
 //var keyPressed = [];
 
-var tick = 200;
+var tick = 150;
 var playingSong = false;
 
 const allSharps = [];
@@ -131,6 +133,7 @@ function App() {
 
       var audioFile = require("./SoundPresets/JoeyTrap/note" + ((temp++ % 12) + 1) + ".ogg");
       var presetAudio = new Audio(audioFile);
+      presetAudio.preload = "auto";
       value.presetAudio = presetAudio;
 
       // Small little bug regarding Maps that send a pointer to the last button whenever attempting to make new eventListeners,
@@ -192,6 +195,8 @@ function App() {
 
       var audioFile = require("./oggNotes/note" + (i+1) + ".ogg");
       var pianoAudio = new Audio(audioFile);
+      pianoAudio.preload = "auto";
+      pianoAudio.volume = pianoVolume;
       allKeysMap.get(e).pianoAudio = pianoAudio;
 
       newKey.addEventListener("mousedown", () => {
@@ -312,14 +317,22 @@ function App() {
   });
 
   const snakeTick = () => { 
+
     snakeMap.forEach((e) => {
       e.forEach((j) => {
         j.classList.remove("snake");
       });
     });
-    playerX += velX;
-    playerY += velY;
-    snakeMap[playerY][playerX].classList.add("snake");
+
+    if ((playerY + velY) >= 0 && (playerY + velY) < snakeMap.length && (playerX + velX) >= 0 && (playerX + velX) < snakeMap[0].length){
+      playerX += velX;
+      playerY += velY;
+      snakeMap[playerY][playerX].classList.add("snake");
+    } else {
+      //console.log("DO NOT");
+      snakeMap[playerY][playerX].classList.add("snake");
+    }
+
   }
 
   useEffect(() => {
@@ -332,7 +345,7 @@ function App() {
 
       setInterval(() => {
         snakeTick();
-      }, 1000/4);
+      }, 1000/5);
 
     } else { // Exit the Snake Minigame
 
@@ -353,8 +366,10 @@ function App() {
     var pianoHolder = document.querySelector(".piano");
     var newNote = document.querySelector(".notes-holder");
     var detailHolder = document.querySelector(".song-details");
+    //var pianoLines = document.querySelector(".piano-lines");
 
     pianoNotes.current.innerHTML = "";
+    //pianoLines.innerHTML = "";
     pianoNotes.current.classList.remove("end");
     
     if (song === null) {playingSong = false; startTime = null; playingSpeed = 0;}
@@ -368,17 +383,46 @@ function App() {
       var longestNote = song.notes[0];
       newNote.style.width = `${pianoHolder.getBoundingClientRect().width}px`;
 
+      /*
+      var lines = ((pianoKeys.length + 1) / 12 + 1);
+
+      for (var i = 0; i < lines; i++){
+        var newLine = document.createElement("div");
+        newLine.classList.add("piano-line");
+        pianoLines.appendChild(newLine);
+        if (i === lines - 1)
+          newLine.style.left = `${pianoHolder.getBoundingClientRect().width - 2}px`;
+        else if (i === 0)
+          newLine.style.left = `${pianoHolder.getBoundingClientRect().width / (lines - 1) * i}px`;
+        else
+          newLine.style.left = `${(pianoHolder.getBoundingClientRect().width / (lines - 1) * i) - 1}px`;
+      }*/
+
       song.notes.forEach((e, i) => {
 
         // Simple function to find out the note that we end on, based off length and duration.
         var keycode = e.note;
+        
+        if (keycode === null && typeof e.tempo !== "undefined") {
+          
+          console.log("tempo: " + e.tempo); 
+          playingSpeed = e.tempo / 60;
+          var newLine = document.createElement("div");
+          newLine.classList.add("line");
+          newLine.style.bottom = `${e.delay * pianoUnit}px`;
+          pianoNotes.current.appendChild(newLine);
+          return;
+
+        }
+
         var index = pianoKeys.indexOf(keycode);
         if (index === -1) return;
-        if ((parseFloat(e.length) + parseFloat(e.delay)) > (parseFloat(longestNote.length) + parseFloat(longestNote.delay))) longestNote = e;
+        if ( (parseFloat(e.length) + parseFloat(e.delay)) > (parseFloat(longestNote.length) + parseFloat(longestNote.delay)) ) longestNote = e;
 
         // While searching for the longest note, we make them and put them on the note holder.
         var newElement = document.createElement("div");
         newElement.classList.add("note");
+        if (e.hand === "left") newElement.classList.add("left");
         newElement.innerText = allKeysMap.get(e.note).character;
         newElement.style.bottom = `${e.delay * pianoUnit}px`;
         newElement.style.height = `${e.length * pianoUnit}px`;
@@ -480,6 +524,9 @@ function App() {
       <div className={`page${mode === "piano" ? " visible" : ""}`}>
 
         <div className="notes-holder">
+          <div className="piano-lines">
+            <div className="line"></div>
+          </div>
           <div ref={pianoNotes} className="piano-notes"></div>
         </div>
 
