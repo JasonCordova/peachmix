@@ -14,14 +14,14 @@ var pianoUnit = 128;    // Piano Height (px) per 1 second
 var sharpWidth = 30;    // Sharp piano width (px)
 var normalWidth = 50;   // Normal piano width (px)
 
-var pianoVolume = 1;
-
 var startTime = null;    
-var maxPlayingSpeed = 2.05;
-var playingSpeed = maxPlayingSpeed;   // Playback piano song speed (Integer)
-
-//var tempPressed = {};
-//var keyPressed = [];
+var playingSpeed = 1;   // Playback piano song speed (Integer)
+var pianoVolume = 1;
+var firstTempo = null;
+var firstTimeSignature = null;
+var tempo = 1;
+var timeSignature = 4/4;
+var startClock = null; // Starting clock for determining Piano Song note position
 
 var tick = 150;
 var playingSong = false;
@@ -102,7 +102,8 @@ function App() {
   const setMode = (temp) => {setSong(null); changeMode(temp); tempMode = temp;}
 
   var searchBar = document.querySelector(".searchbar");
-  var actualPiano = document.querySelector(".piano");
+  var pianoContainer = document.querySelector(".piano-holder");
+  //var actualPiano = document.querySelector(".piano");
   var searchResults = document.querySelector(".search-results");
   const searchIcon = <svg className="search-icon" onClick={() => {searchBar.focus();}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><path d="m22.79 23.32 10.85 10.25-10.85-10.25ZM1.98 13.93c0-6.6 5.67-11.96 12.66-11.96 7 0 12.67 5.36 12.67 11.96 0 6.6-5.67 11.95-12.67 11.95-6.99 0-12.66-5.35-12.66-11.95Z" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4"/></svg>;
 
@@ -366,14 +367,17 @@ function App() {
     var pianoHolder = document.querySelector(".piano");
     var newNote = document.querySelector(".notes-holder");
     var detailHolder = document.querySelector(".song-details");
+    var specialLines = [];
     //var pianoLines = document.querySelector(".piano-lines");
 
     pianoNotes.current.innerHTML = "";
+    firstTempo = null;
+    firstTimeSignature = null;
     //pianoLines.innerHTML = "";
     pianoNotes.current.classList.remove("end");
     
     if (song === null) {playingSong = false; startTime = null; playingSpeed = 0;}
-    else {playingSong = true; playingSpeed = maxPlayingSpeed; setTimeout(() => {detailHolder.classList.remove("visible");}, 2000);}
+    else {playingSong = true; playingSpeed = 1; setTimeout(() => {detailHolder.classList.remove("visible");}, 2000);}
 
     // Executes only when there is a song available and exists.
 
@@ -405,12 +409,30 @@ function App() {
         
         if (keycode === null && typeof e.tempo !== "undefined") {
           
-          console.log("tempo: " + e.tempo); 
-          playingSpeed = e.tempo / 60;
+          if (firstTempo === null) {firstTempo = e.tempo; playingSpeed = e.tempo / 60}
+
           var newLine = document.createElement("div");
           newLine.classList.add("line");
+          newLine.innerText = e.tempo;
           newLine.style.bottom = `${e.delay * pianoUnit}px`;
           pianoNotes.current.appendChild(newLine);
+
+          specialLines.push({element: newLine, tempo: e.tempo, delay: e.delay});
+
+          return;
+
+        } else if (keycode === null && typeof e.timeSignature !== "undefined"){
+
+          if (firstTimeSignature === null) {firstTimeSignature = e.timeSignature; timeSignature = e.timeSignature;}
+
+          var newSignature = document.createElement("div");
+          newSignature.classList.add("time-signature");
+          newSignature.innerText = e.timeSignature;
+          newSignature.style.bottom = `${e.delay * pianoUnit}px`;
+          pianoNotes.current.appendChild(newSignature);
+
+          specialLines.push({element: newSignature, timeSignature: e.timeSignature, delay: e.delay});
+
           return;
 
         }
@@ -452,8 +474,24 @@ function App() {
           playingSong = false; setSong(null); pianoNotes.current.classList.remove("visible"); return;
         }*/
 
-        if (playingSong !== false && start < pianoNotes.current.clientHeight){ 
-          start = (pianoHolder.getBoundingClientRect().top * -1 - (pianoUnit * 3)) + (pianoUnit * Math.floor(Math.abs(startTime - new Date()) / 1000 * 100) / 100 * playingSpeed);
+        if (playingSong !== false && start < pianoNotes.current.clientHeight){
+          
+          specialLines.forEach((e, i) => {
+            
+            var element = e.element;
+            var bounds = element.getBoundingClientRect().bottom;
+            if (typeof e.tempo !== "undefined" && bounds >= pianoHolder.getBoundingClientRect().top){
+              playingSpeed = e.tempo / 60;
+              specialLines.splice(i, 1);
+            } else if (typeof e.timeSignature !== "undefined" && bounds >= pianoHolder.getBoundingClientRect().top){
+              console.log("TS PASSED: " + e.timeSignature + " | " + i);
+              timeSignature = parseFloat(e.timeSignature);
+              specialLines.splice(i, 1);
+            }
+
+          });
+
+          start = (pianoHolder.getBoundingClientRect().top * -1 - (pianoUnit * 3)) + (pianoUnit * Math.floor(Math.abs(startTime - new Date()) / 1000 * 100) / 100 * playingSpeed * timeSignature);
           pianoNotes.current.style.transform = `translateY(${start}px)`;
         } else if (playingSong === false || start >= pianoNotes.current.clientHeight) {
           playingSong = false; setSong(null); pianoNotes.current.classList.remove("visible"); return;
@@ -539,7 +577,7 @@ function App() {
             <div className="searchbar-holder">
               <input className="searchbar" placeholder="Search songs & artists" onFocus={() => {
                 searchResults.classList.remove("hidden");
-                actualPiano.classList.add("faded");
+                pianoContainer.classList.add("faded");
 
                 var text = searchBar.value.toUpperCase();
                 var results = [];
@@ -575,7 +613,7 @@ function App() {
                   });
 
                 });
-              }} onBlur={() => {searchResults.classList.add("hidden"); actualPiano.classList.remove("faded");}} onInput={() => {
+              }} onBlur={() => {searchResults.classList.add("hidden"); pianoContainer.classList.remove("faded");}} onInput={() => {
                 var text = searchBar.value.toUpperCase();
                 var results = [];
                 songs.forEach((song) => {

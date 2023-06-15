@@ -260,9 +260,10 @@ textarea:focus, input:focus{
   transition: opacity .2s ease-out;
 }
 
-.piano.faded {
+.piano-holder.faded {pointer-events: none;}
+
+.piano-holder.faded .piano {
   opacity: 0.2;
-  pointer-events: none;
 }
 
 .white-key {
@@ -513,6 +514,7 @@ textarea:focus, input:focus{
   box-sizing: border-box;
   box-shadow: 0px 1px 2px #00000094;
   overflow: hidden;
+  pointer-events: all;
 }
 
 .searchbar {
@@ -581,6 +583,19 @@ textarea:focus, input:focus{
   position: absolute;
   left: 0px;
   border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.time-signature {
+  width: 100%;
+  height: 1px;
+  background-color: #ff000010;
+  position: absolute;
+  left: 0px;
+  border-radius: 2px;
+  opacity: 0;
 }
 
 .search:hover {
