@@ -4,25 +4,37 @@ import songs from './songs.js';
 
 
 const logo = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M10 2C15.27.5 23.33.12 27.89 3.65c1.86 1.44 4.29 4.39 3.43 6.93-.89 2.62-5.01 3.15-7.32 2.8C17.64 12.43 12.89 7.37 10 2Zm25 10c6.05 0 10.91-.74 15.96 3.39C63.5 25.64 60.44 48.11 46 55c4.12-12.59 4.98-26.19-4.33-36.96L35 12Zm-19 2.11c4.85-.16 5.23 1.28 9 1.41 5.15.17 8.97-4.14 15.47 3.57C49.53 29.84 50.92 60 33 62.79 17.71 65.17-1.18 44.85 7.26 24c1.97-4.87 3.89-7.71 8.74-9.89Z"/></svg>;
-//const searchIcon = <svg xmlns="http://www.w3.org/2000/svg"><path d="M23.029 23.621 34 34ZM2 14.109C2 7.421 7.731 2 14.8 2s12.8 5.421 12.8 12.109-5.731 12.109-12.8 12.109S2 20.795 2 14.109Z" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/></svg>
 
 const upload = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 221 215"><path d="M95 58 69 85c-2.76 2.76-10.01 10.5-13 12.12-2.16.93-4.75.99-7 0C44.23 95.47 34.24 85.11 33.28 80c-1.08-5.72 3.22-10.14 6.81-14l16.87-17L67 38l26-27c5.68-5.67 9.34-10.2 18-9.94 9.11.27 15.11 7.92 20.99 13.94L171 56c4.41 4.41 15.49 14.23 16.7 20 1.71 8.22-13.4 24.34-21.7 21.4-3.95-1.4-15.37-13.75-19-17.4l-21-22v78c-.01 3.19.29 6.97-1.89 9.57-4 4.78-23.22 4.78-27.22 0-2.18-2.6-1.88-6.38-1.89-9.57V58ZM6.02 132.74c4.52-1.11 9.33-.8 13.98-.74 21.08.29 7.18 27.05 13.69 40 4.6 9.15 13.2 9.99 22.31 10h109c4.08-.01 6.97-.03 11-1.04 16.76-4.23 12.85-22.91 13-35.96.05-3.9.17-7.72 3.28-10.57 3.62-3.32 11.94-2.49 16.72-2.43 11.07.16 11.99 5.4 12 15v21c0 14.26.97 25.96-10.04 36.96-3.32 3.33-6.48 5.74-10.96 7.28-4.84 1.67-8 1.75-13 1.76H34c-4.75-.01-7.35-.02-12-1.44C-1.94 205.22 0 180.82 0 161c0-5.25-.78-19.93 1.31-23.96 1.34-2.57 2.35-2.98 4.71-4.3Z"/></svg>;
 const piano = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1064 1064"><path d="M24 1.07h1002c12.32-.07 19.6-.9 28.91 8.95 3.26 3.44 5.25 6.43 6.65 10.98 1.42 4.65 1.43 7.25 1.44 12v999c-.09 19.13-11.91 30.97-31 31H38c-12.32 0-19.6.83-28.91-9.02-3.26-3.44-5.25-6.43-6.65-10.98-1.42-4.65-1.43-7.25-1.44-12V41C1 28.6-.21 19.85 9.09 10.02 13.84 4.99 17.37 3.04 24 1.07ZM193 60H60v944h192V665h-26c-21.95-.03-32.97-16.37-33-37V60Zm250 0h-73v565c-.03 20.4-8.95 39.89-32 40h-27v339h191V665h-25c-5.3-.01-10.08-.27-15-2.55-15.2-7.06-18.98-26.39-19-41.45V60Zm251 0h-73v561c-.03 21.17-6.76 43.88-32 44h-27v339h191V665h-26c-23.77-.04-32.97-18.62-33-40V60Zm310 0H871v568c-.02 13.59-6.29 30.21-20 35.44-4.09 1.56-7.72 1.55-12 1.56h-27v339h192V60Z"/></svg>;
 const preset = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 278 216"><path d="M142 .66c7.31-1.17 11.15 2.22 12.75 9.34v189c.25 2.57.33 5.51 0 8-.61 1.34-1.12 2.77-1.84 3.96-6.51 10.75-16.8 1.51-22.91-3.91l-43-37.2c-3.71-3.27-12.81-11.93-17-13.29-2.05-.67-4.83-.56-7-.56H25c-4.57 0-14.18.6-17.98-1.31C.96 151.65 1.01 146.86 1 141V74c.02-12.14 4.08-14.94 16-15h47c2.12 0 5 .09 7-.51 4.55-1.36 13.95-10.59 18-14.07l33-28.55C127.65 11 135.28 3.42 142 .66Zm88.99.92c8.14-1.1 10.99 3.31 15.29 9.42C252.14 19.33 259 30.66 263 40c19.36 45.18 19.15 94.05-.86 139-3.26 7.33-15.69 28.99-21.31 33.57-6.91 5.63-17.91.94-16.59-8.57.62-4.48 6.11-11 8.76-15 5.59-8.44 10.53-17.55 14.19-27 15.9-41.05 13.16-87.79-9.2-126l-7-11c-5.35-7.74-13.44-18.1 0-23.42Zm-25.99 26c8.01-1.03 10.67 3.34 14.66 9.42 5.79 8.83 9.01 15.11 12.66 25 12.18 33.03 11.37 65.44-1.92 98-2.76 6.74-7.34 14.94-11.4 21-2.38 3.54-4.51 6.84-9 7.72-7.98 1.56-13.63-5.05-11.35-12.72 1.11-3.77 5.34-9.27 7.48-13 3.8-6.66 6.93-13.73 9.36-21 10.65-32 5.29-65.98-13.16-94-5.03-7.65-8.57-15.98 2.67-20.42Zm-28 28.11c10.33-1.27 14.74 10.4 18.13 18.31 8.6 20.1 8.8 45.63 1.06 66-2.88 7.57-8.05 22.29-18.19 20.76-6.86-1.04-9.09-7.73-7.36-13.76l5.74-12c3.13-7.44 5.89-19.95 5.58-28-.33-8.45-2.98-19.28-6.4-27l-5.91-12c-1.63-6.23 1.93-10.1 7.35-12.31Z"/></svg>;
 
+const pauseIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 384"><path d="M9 .57 35 0h45c12.78.06 15.98 4.81 16 17v350c-.02 13.19-3.81 16.98-17 17H15c-11.39-.14-14.95-5.11-15-16V15C.09 7.52 1.63 3.47 9 .57Zm160 0L195 0h45c12.78.06 15.98 4.81 16 17v350c-.02 13.19-3.81 16.98-17 17h-64c-11.39-.14-14.95-5.11-15-16V15c.09-7.48 1.63-11.53 9-14.43Z"/></svg>;
+const endIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M0 0h16v16H0Z"/></svg>;
+const sizeIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 16"><path d="m23.88 16-.946-2.6h-4.582L17.39 16h-1.773l4.1-10.667h1.908L25.728 16Zm-4.988-4.056h3.5L20.651 7.2ZM12.395 16l-1.42-3.9H4.1L2.659 16H0L6.152 0h2.863l6.152 16ZM4.912 9.915h5.251l-2.614-7.12ZM18.509.037h4.7l-2.352 3.729Z"/></svg>;
+const playingIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 199 225"><path d="M8.04 1.74C18.72-.89 26.18 5.45 35 10.58l51 29.57 54 31.28 44 25.77c5.69 3.42 13.28 7.36 13.88 14.8.54 6.73-3.79 9.82-8.88 13.14l-31 18.06-82 47.22-56 31.79C5.89 228.63 1.02 221.64 1 208V15C1.09 8.68 2.31 4.99 8.04 1.74Z"/></svg>;
+
+
+const halfSpeed = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 10"><path d="M3.359 9.401c2.235 0 3.372-1.75 3.372-4.573v-.255C6.731 1.773 5.581 0 3.359 0 1.175 0 0 1.775 0 4.573v.255c0 2.823 1.175 4.573 3.359 4.573Zm0-1.226c-1.252 0-1.839-1.06-1.839-3.283v-.383c0-2.21.588-3.283 1.839-3.283 1.29 0 1.852 1.073 1.852 3.283v.383c0 2.222-.562 3.283-1.852 3.283Zm5.71 1.06V7.702h-1.52v1.533Zm4.483.166a3.047 3.047 0 0 0 3.3-3.053v-.141a2.8 2.8 0 0 0-2.942-2.885 2.747 2.747 0 0 0-1.827.65l.422-2.567h3.934V.166h-5.02l-.8 5.1 1.252.089a2.057 2.057 0 0 1 1.706-.885 1.683 1.683 0 0 1 1.814 1.763v.179a1.7 1.7 0 0 1-1.814 1.763 1.676 1.676 0 0 1-1.813-1.533h-1.482a2.98 2.98 0 0 0 3.27 2.759Zm5.569-.166 1.608-2.402 1.648 2.4h1.622l-2.4-3.411 2.261-3.168h-1.531l-1.507 2.2-1.493-2.197h-1.626l2.261 3.206-2.376 3.372Z"/></svg>;
+const normalSpeed = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 11"><path d="M3.731 10.497V.189H2.497a3.909 3.909 0 0 1-2.5 1.7v1.51a4.641 4.641 0 0 0 2.076-.958v8.056Zm3.673 0V8.755H5.677v1.742Zm4.763.189c2.541 0 3.833-1.989 3.833-5.2v-.29c0-3.18-1.307-5.2-3.833-5.2-2.483 0-3.819 2.018-3.819 5.2v.29c0 3.211 1.334 5.2 3.819 5.2Zm0-1.394c-1.423 0-2.091-1.205-2.091-3.731v-.439c0-2.512.668-3.731 2.091-3.731 1.466.003 2.105 1.222 2.105 3.731v.436c0 2.529-.639 3.734-2.105 3.734Zm6.287 1.205 1.828-2.729 1.874 2.729H24l-2.73-3.875 2.57-3.6h-1.742l-1.716 2.5-1.7-2.5h-1.84l2.57 3.642-2.701 3.833Z"/></svg>;
+const doubleSpeed = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 10"><path d="M6.274 9.334V8.082H1.562c.013-1.033.3-1.536 2.053-2.3 2.117-.9 2.595-1.859 2.595-3.1v-.077A2.721 2.721 0 0 0 3.228-.003a2.92 2.92 0 0 0-3.15 2.879h1.5a1.552 1.552 0 0 1 1.675-1.654 1.369 1.369 0 0 1 1.472 1.42v.039c0 .942-.31 1.381-1.846 2.014C.401 5.706.001 6.791.001 8.301v1.033Zm2.969 0V7.785H7.707v1.549Zm4.235.168c2.259 0 3.408-1.769 3.408-4.622v-.258C16.886 1.795 15.724 0 13.478 0c-2.208 0-3.4 1.795-3.4 4.622v.258c.005 2.853 1.193 4.622 3.4 4.622Zm0-1.239c-1.265 0-1.859-1.072-1.859-3.318v-.387c0-2.233.594-3.318 1.859-3.318 1.3 0 1.872 1.084 1.872 3.318v.387c0 2.246-.568 3.318-1.872 3.318Zm5.59 1.071 1.627-2.427 1.665 2.427h1.641l-2.428-3.447 2.285-3.2h-1.549l-1.524 2.219-1.51-2.221h-1.64l2.285 3.237-2.401 3.412Z"/></svg>
+
 var pianoUnit = 128;    // Piano Height (px) per 1 second
 var sharpWidth = 30;    // Sharp piano width (px)
 var normalWidth = 50;   // Normal piano width (px)
 
-var startTime = null;    
-var playingSpeed = 1;   // Playback piano song speed (Integer)
-var pianoVolume = 1;
+var pianoVolume = 0.65;
+
 var firstTempo = null;
 var firstTimeSignature = null;
-var tempo = 1;
-var timeSignature = 4/4;
-var startClock = null; // Starting clock for determining Piano Song note position
 
+var playingSpeed = 1;   // Playback piano song speed (Integer)
+var playing = 1; // 1 for playing || 0 for not.
+
+var tempo = 60;
+var timeSignature = 4/4;
+var currentTime = 0;
+var startTime = null; // Starting clock for determining Piano Song note position
 var tick = 150;
 var playingSong = false;
 
@@ -32,19 +44,6 @@ var mouseDown = false;
 var tempMode = "menu";
 
 var playerX, playerY, velX = 1, velY = 0;
-
-const printNotes = () => {
-
-  /*
-  var string = "";
-
-  keyPressed.forEach((e, i) => {
-    string += `{ note: '${e.note}', delay: '${e.delay}', length: '${Math.floor(e.length * 100) / 100}'},`;
-    string += "\n";
-  });
-  */
-
-}
 
 var snakeMap = [];
 var allKeysMap = new Map();
@@ -90,16 +89,28 @@ allKeysMap.set(190, {character: '.', preset: false, pressed: false, color: "oran
 allKeysMap.set(186, {character: ';', preset: false, pressed: false, color: "orange"});
 allKeysMap.set(191, {character: '/', preset: false, pressed: false, color: "orange"});
 allKeysMap.set(222, {character: '\'', preset: false, pressed: false, color: "orange"});
+allKeysMap.set(16, {character: '⇧', preset: false, pressed: false, color: "orange"});
 
-const pianoKeys = [81, 50, 87, 51, 69, 82, 53, 84, 54, 89, 55, 85, 73, 57, 79, 48, 80, 90, 83, 88, 68, 67, 70, 86, 66, 72, 78, 74, 77, 188, 76, 190, 186, 191, 222];
+const pianoKeys = [81, 50, 87, 51, 69, 82, 53, 84, 54, 89, 55, 85, 73, 57, 79, 48, 80, 90, 83, 88, 68, 67, 70, 86, 66, 72, 78, 74, 77, 188, 76, 190, 186, 191, 222, 16];
+
+const getTimeDifference = () => {
+
+  var temp = startTime;
+  startTime = new Date();
+  return (Math.abs(temp - new Date()) / 1000);
+}
 
 function App() {
 
   const [mode, changeMode] = useState(tempMode);
   const [song, setSong] = useState(null);
   const [playSnake, setPlaySnake] = useState(false);
+  const [playingState, setPlayingState] = useState(playing); 
+  const [playingSpeedState, setPlayingSpeedState] = useState(playingSpeed);
   const pianoNotes = useRef();
   const setMode = (temp) => {setSong(null); changeMode(temp); tempMode = temp;}
+  const changePlayingSpeed = (temp) => {setPlayingSpeedState(temp); playingSpeed = temp;};
+  const changePlaying = (temp) => {setPlayingState(temp); playing = temp;}
 
   var searchBar = document.querySelector(".searchbar");
   var pianoContainer = document.querySelector(".piano-holder");
@@ -226,10 +237,6 @@ function App() {
 
     });
 
-    var lastKey = document.createElement("div");
-    lastKey.classList.add("white-key");
-    pianoHolder.appendChild(lastKey);
-
   }
 
   /* ------------------------------------------------------------------------- */
@@ -242,15 +249,6 @@ function App() {
     document.addEventListener("keydown", (e) => {
 
       if (e.repeat) return; 
-
-      /*
-      if (playingSong === true && e.keyCode === 32) {
-
-        var newNote = document.querySelector(".notes-holder");
-        if (playingSpeed === 0) { newNote.classList.remove("paused"); playingSpeed = maxPlayingSpeed; console.log(playingSpeed); } 
-        else { newNote.classList.add("paused"); playingSpeed = 0; console.log(playingSpeed); }
-
-      }*/
 
       // PRESET MODE
 
@@ -272,11 +270,6 @@ function App() {
         allKeysMap.get(e.keyCode).pianoKey.classList.add("pressed"); 
         allKeysMap.get(e.keyCode).pianoAudio.currentTime = 0; 
         allKeysMap.get(e.keyCode).pianoAudio.play();
-
-        // RECORDNG KEYS
-
-        //if (startTime === 0){ tempPressed[e.keyCode] = {delay: 0, length: 0}; startTime = new Date(); } 
-        //else { tempPressed[e.keyCode] = {delay: Math.floor(Math.abs(startTime - new Date()) / 1000 * 100) / 100, length: 0}; }
       }
 
     });
@@ -284,17 +277,11 @@ function App() {
     document.addEventListener("keyup", (e) => {
       if (e.repeat) return; 
       if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).pianoKey !== "undefined" && tempMode === "piano" && allKeysMap.get(e.keyCode).pressed === true) {
-        //console.log("Up: " + e.keyCode); 
         allKeysMap.get(e.keyCode).pressed = false;
-        //tempPressed[e.keyCode].length = Math.floor(Math.abs(startTime - new Date()) / 1000 * 100) / 100 - tempPressed[e.keyCode].delay;
-        //keyPressed.push({note: String.fromCharCode(e.keyCode), delay: tempPressed[e.keyCode].delay, length: tempPressed[e.keyCode].length});
-        //delete tempPressed[e.keyCode];
-        printNotes();
         allKeysMap.get(e.keyCode).pianoKey.classList.remove("pressed");
       }
 
       if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).presetKey !== "undefined" && tempMode === "preset" && allKeysMap.get(e.keyCode).pressed === true) {
-        //console.log("Up: " + e.keyCode); 
         allKeysMap.get(e.keyCode).pressed = false;
         allKeysMap.get(e.keyCode).presetKey.classList.remove("pressed");
       }
@@ -330,7 +317,6 @@ function App() {
       playerY += velY;
       snakeMap[playerY][playerX].classList.add("snake");
     } else {
-      //console.log("DO NOT");
       snakeMap[playerY][playerX].classList.add("snake");
     }
 
@@ -370,14 +356,22 @@ function App() {
     var specialLines = [];
     //var pianoLines = document.querySelector(".piano-lines");
 
+    const resetPiano = () => {
+      changePlaying(1);
+      changePlayingSpeed(1);
+    }
+
+    resetPiano();
+
     pianoNotes.current.innerHTML = "";
     firstTempo = null;
     firstTimeSignature = null;
-    //pianoLines.innerHTML = "";
+    currentTime = 0;
+    startTime = null;
     pianoNotes.current.classList.remove("end");
     
-    if (song === null) {playingSong = false; startTime = null; playingSpeed = 0;}
-    else {playingSong = true; playingSpeed = 1; setTimeout(() => {detailHolder.classList.remove("visible");}, 2000);}
+    if (song === null) {playingSong = false; startTime = null;}
+    else {playingSong = true; setTimeout(() => {detailHolder.classList.remove("visible");}, 2000);}
 
     // Executes only when there is a song available and exists.
 
@@ -387,21 +381,6 @@ function App() {
       var longestNote = song.notes[0];
       newNote.style.width = `${pianoHolder.getBoundingClientRect().width}px`;
 
-      /*
-      var lines = ((pianoKeys.length + 1) / 12 + 1);
-
-      for (var i = 0; i < lines; i++){
-        var newLine = document.createElement("div");
-        newLine.classList.add("piano-line");
-        pianoLines.appendChild(newLine);
-        if (i === lines - 1)
-          newLine.style.left = `${pianoHolder.getBoundingClientRect().width - 2}px`;
-        else if (i === 0)
-          newLine.style.left = `${pianoHolder.getBoundingClientRect().width / (lines - 1) * i}px`;
-        else
-          newLine.style.left = `${(pianoHolder.getBoundingClientRect().width / (lines - 1) * i) - 1}px`;
-      }*/
-
       song.notes.forEach((e, i) => {
 
         // Simple function to find out the note that we end on, based off length and duration.
@@ -409,7 +388,7 @@ function App() {
         
         if (keycode === null && typeof e.tempo !== "undefined") {
           
-          if (firstTempo === null) {firstTempo = e.tempo; playingSpeed = e.tempo / 60}
+          if (firstTempo === null) {firstTempo = e.tempo; tempo = e.tempo;}
 
           var newLine = document.createElement("div");
           newLine.classList.add("line");
@@ -459,41 +438,36 @@ function App() {
 
       // Now that all the notes are made, we must move them accordingly down the screen.
 
-      var start = pianoHolder.getBoundingClientRect().top * -1 - (pianoUnit * 3);
+      var startPosition = pianoHolder.getBoundingClientRect().top * -1 - (pianoUnit * 3);
+
+      currentTime = startPosition;
       newNote.style.height = `${pianoHolder.getBoundingClientRect().top}px`;
-      pianoNotes.current.style.transform = `translateY(${start}px)`;
+      pianoNotes.current.style.transform = `translateY(${currentTime}px)`;
       pianoNotes.current.style.height = `${((parseFloat(longestNote.delay) + parseFloat(longestNote.length)) * pianoUnit)}px`;
 
       // The actual looping portion of the Playing Song function.
 
       const startPlaying = () => {
 
-        /*
-        if (playingSong !== false && start < pianoNotes.current.clientHeight){ start += pianoUnit/tick * playingSpeed; pianoNotes.current.style.transform = `translateY(${start}px)`;
-        } else if (playingSong === false || start >= pianoNotes.current.clientHeight) {
-          playingSong = false; setSong(null); pianoNotes.current.classList.remove("visible"); return;
-        }*/
-
-        if (playingSong !== false && start < pianoNotes.current.clientHeight){
+        if (playingSong !== false && currentTime < pianoNotes.current.clientHeight){
           
           specialLines.forEach((e, i) => {
             
             var element = e.element;
             var bounds = element.getBoundingClientRect().bottom;
             if (typeof e.tempo !== "undefined" && bounds >= pianoHolder.getBoundingClientRect().top){
-              playingSpeed = e.tempo / 60;
+              tempo = e.tempo
               specialLines.splice(i, 1);
             } else if (typeof e.timeSignature !== "undefined" && bounds >= pianoHolder.getBoundingClientRect().top){
-              console.log("TS PASSED: " + e.timeSignature + " | " + i);
               timeSignature = parseFloat(e.timeSignature);
               specialLines.splice(i, 1);
             }
 
           });
 
-          start = (pianoHolder.getBoundingClientRect().top * -1 - (pianoUnit * 3)) + (pianoUnit * Math.floor(Math.abs(startTime - new Date()) / 1000 * 100) / 100 * playingSpeed * timeSignature);
-          pianoNotes.current.style.transform = `translateY(${start}px)`;
-        } else if (playingSong === false || start >= pianoNotes.current.clientHeight) {
+          currentTime += (pianoUnit * getTimeDifference() * playing * playingSpeed * timeSignature * tempo/60);
+          pianoNotes.current.style.transform = `translateY(${currentTime}px)`;
+        } else if (playingSong === false || currentTime >= pianoNotes.current.clientHeight) {
           playingSong = false; setSong(null); pianoNotes.current.classList.remove("visible"); return;
         }
 
@@ -561,16 +535,26 @@ function App() {
 
       <div className={`page${mode === "piano" ? " visible" : ""}`}>
 
-        <div className="notes-holder">
-          <div className="piano-lines">
-            <div className="line"></div>
-          </div>
+        <div className={`notes-holder${playingState === 0 ? " paused" : ""}`}>
           <div ref={pianoNotes} className="piano-notes"></div>
         </div>
 
         <div className="piano-holder">
 
           <div className="piano">
+          </div>
+
+          <div className={`song-buttons${song !== null ? " visible" : ""}`}>
+            <div className="song-button" onClick={() => {playingState === 0 ? changePlaying(1) : changePlaying(0);}}>{playingState === 0 ? playingIcon : pauseIcon}</div>
+            <div className="song-button" onClick={() => {playingSong = false; setSong(null); pianoNotes.current.classList.remove("visible");}}>{endIcon}</div>
+            {
+            //<div className="song-button" onClick={() => {if (pianoUnit === 128) pianoUnit = 176; else if (pianoUnit === 176) pianoUnit = 80; else pianoUnit = 128;}}>{sizeIcon}</div>
+            }
+            <div className="song-button playback" onClick={() => {if (playingSpeedState === 1) changePlayingSpeed(2); else if (playingSpeedState === 2) changePlayingSpeed(0.5); else changePlayingSpeed(1);}}>
+              {playingSpeedState === 2 && doubleSpeed}
+              {playingSpeedState === 1 && normalSpeed}
+              {playingSpeedState === 0.5 && halfSpeed}
+            </div>
           </div>
 
           <div className={`song-search${song !== null ? " hidden" : ""}`}>
@@ -657,7 +641,7 @@ function App() {
           </div>
 
           <div className={`song-details${song !== null ? " visible" : ""}`}>
-            <div className="song-title">{song !== null ? song.title : `Restarting...`}</div>
+            <div className="song-title">{song !== null ? song.title : ""}</div>
             <div className="song-artist">{song !== null ? song.artist : ""}</div>
           </div>
 

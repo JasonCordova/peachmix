@@ -462,11 +462,14 @@ textarea:focus, input:focus{
   z-index: 0;
 }
 
+.notes-holder.paused {}
+
 .notes-holder {
   position: fixed;
   top: 0%;
   overflow: hidden;
   padding-bottom: 12px;
+  transition: filter .1s ease-in-out;
 }
 
 .piano-notes.visible {opacity: 1;}
@@ -485,18 +488,16 @@ textarea:focus, input:focus{
   font-weight: 500;
   position: absolute;
   box-shadow: 0px 0px 3px -2px #000000cc inset;
-  transition: filter .2s ease-out;
 }
 
 .sharp-flat {
   width: var(--sharp-flat-note-width);
   background-color: var(--sharp-flat-note);
+  z-index: 1;
 }
 
 .note.left {background-color: var(--left-regular-note);}
 .note.left.sharp-flat {background-color: var(--left-sharp-flat-note);}
-
-.notes-holder.paused .note {filter: grayscale(1);}
 
 .song-search {    
   position: absolute;
@@ -556,26 +557,6 @@ textarea:focus, input:focus{
   transition: background-color .2s ease-in-out;
 }
 
-.piano-lines {
-  height: 100%;
-  width: 100%;
-  position: relative;
-  padding-bottom: 12px;
-  opacity: 0;
-  transition: opacity .2s ease-out;
-}
-
-.piano-lines.visible {
-  opacity: 1;
-}
-
-.piano-lines .piano-line {
-  width: 1px;
-  height: 100%;
-  background-color: #4c4c4c;
-  position: absolute;
-}
-
 .line {
   width: 100%;
   height: 2px;
@@ -595,7 +576,7 @@ textarea:focus, input:focus{
   position: absolute;
   left: 0px;
   border-radius: 2px;
-  opacity: 0;
+  opacity: 1;
 }
 
 .search:hover {
@@ -655,6 +636,59 @@ textarea:focus, input:focus{
 .search-results::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.4);
   border-radius: 8px;
+}
+
+.song-buttons {
+  flex-shrink: 0;
+  flex-grow: 1;
+  position: absolute;
+  bottom: 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: #0c0c0cf2;
+  border-radius: 8px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease-in;
+}
+
+.song-buttons.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.song-button {
+  height: 48px;
+  width: 48px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: fill .2s ease-out, background-color .2s ease-out;
+  background-color: transparent;
+  border-radius: 0px;
+  border-right: 1px solid rgb(15, 15, 15);
+  box-sizing: border-box;
+  fill: rgba(255, 255, 255, 0.2);
+}
+
+.song-button:hover {
+  background-color: rgb(26, 26, 26);
+  fill: white;
+}
+
+.song-button.playback {border-right: 0px;}
+
+.song-button.playback svg{
+  width: 30px;
+}
+
+.song-button svg {
+  height: 16px;
 }
 
 /* Handle on hover */
