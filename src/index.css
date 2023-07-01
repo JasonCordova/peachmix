@@ -52,10 +52,15 @@ textarea:focus, input:focus{
   --launchpad-color: #232323;
   --launchpad-button: #eaeff5;
   --launchpad-button-hover: #afb0b3;
+  --importpad-button-hover: #6d6d6d;
+  --importpad-loaded-button-hover: rgb(50, 166, 255);
+  --launchpad-empty: #414141;
+  --import-pressed: #4cb1ff;
 
   --blue: #0994FF;
   --red: #FF3838;
   --green: #00AF4F;
+  --dark-green: #005728;
   --purple: #6000ff;
   --pink: #FF38D1;
   --orange: #FF7A1F;
@@ -215,7 +220,7 @@ textarea:focus, input:focus{
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: 700px;
+  width: 832px;
   border-radius: 16px;
   overflow: hidden;
   background-color: var(--secondary);
@@ -236,9 +241,12 @@ textarea:focus, input:focus{
 }
 
 .audio-details {
-  flex-basis: 100%;
-  height: 100%;
-  text-align: center;
+  width: 100%;
+  height: 314px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 /* ----------- PIANO ------------- */
@@ -732,6 +740,30 @@ textarea:focus, input:focus{
   height: 60%;
 }
 
+.import-pad .button {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  background-color: var(--launchpad-empty);
+  color: #ffffff63;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 1.1em;
+  border-radius: 6px;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  padding: 10px 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: -6px -6px 12px rgb(0 0 0 / 8%) inset, 3px 3px 12px rgb(255 255 255 / 10%) inset, 0px 0px 6px 1px rgb(0 0 0 / 55%);
+  transition: background-color 0.05s ease-in, color 0.05s ease-in;
+  box-sizing: border-box;
+}
+
 .launchpad .button {
   width: 64px;
   height: 64px;
@@ -761,8 +793,18 @@ textarea:focus, input:focus{
   background-color: var(--launchpad-button-hover);
 }
 
+.import-pad .button:not(.loaded):hover {
+  background-color: var(--importpad-button-hover);
+}
+
+.import-pad .button.loaded:hover {
+  background-color: var(--importpad-loaded-button-hover);
+}
+
 
 .launchpad.minigame .button.snake{background-color: var(--green);}
+.launchpad.minigame .button.body{background-color: var(--dark-green);}
+.launchpad.minigame .button.food{background-color: var(--red);}
 
 .launchpad span {position: relative; z-index: 1; pointer-events: none;}
 
@@ -773,3 +815,39 @@ textarea:focus, input:focus{
 .launchpad:not(.minigame) .button.pressed.purple {background-color: var(--purple);}
 .launchpad:not(.minigame) .button.pressed.pink {background-color: var(--pink);}
 .launchpad:not(.minigame) .button.pressed.orange {background-color: var(--orange);}
+
+.import-pad .button.pressed {background-color: var(--import-pressed); color: white;}
+
+/* -------------------- IMPORT -------------------------- */
+
+.import-pad {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 314px;
+  gap: 10px;
+  padding: 14px;
+  box-sizing: border-box;
+  position: relative;
+  flex-shrink: 0;
+  background-color: var(--launchpad-color);
+  border-radius: 16px;
+}
+
+.ghst-input {
+  display: none;
+}
+
+.drag-input {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.button.selected {border: 2px solid hsla(0, 0%, 100%, 0.6);}
+
+.button.loaded {background-color: var(--blue); color: white}

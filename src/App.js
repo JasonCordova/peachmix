@@ -11,7 +11,7 @@ const preset = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 278 216"><pa
 
 const pauseIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 384"><path d="M9 .57 35 0h45c12.78.06 15.98 4.81 16 17v350c-.02 13.19-3.81 16.98-17 17H15c-11.39-.14-14.95-5.11-15-16V15C.09 7.52 1.63 3.47 9 .57Zm160 0L195 0h45c12.78.06 15.98 4.81 16 17v350c-.02 13.19-3.81 16.98-17 17h-64c-11.39-.14-14.95-5.11-15-16V15c.09-7.48 1.63-11.53 9-14.43Z"/></svg>;
 const endIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M0 0h16v16H0Z"/></svg>;
-const sizeIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 16"><path d="m23.88 16-.946-2.6h-4.582L17.39 16h-1.773l4.1-10.667h1.908L25.728 16Zm-4.988-4.056h3.5L20.651 7.2ZM12.395 16l-1.42-3.9H4.1L2.659 16H0L6.152 0h2.863l6.152 16ZM4.912 9.915h5.251l-2.614-7.12ZM18.509.037h4.7l-2.352 3.729Z"/></svg>;
+//const sizeIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 16"><path d="m23.88 16-.946-2.6h-4.582L17.39 16h-1.773l4.1-10.667h1.908L25.728 16Zm-4.988-4.056h3.5L20.651 7.2ZM12.395 16l-1.42-3.9H4.1L2.659 16H0L6.152 0h2.863l6.152 16ZM4.912 9.915h5.251l-2.614-7.12ZM18.509.037h4.7l-2.352 3.729Z"/></svg>;
 const playingIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 199 225"><path d="M8.04 1.74C18.72-.89 26.18 5.45 35 10.58l51 29.57 54 31.28 44 25.77c5.69 3.42 13.28 7.36 13.88 14.8.54 6.73-3.79 9.82-8.88 13.14l-31 18.06-82 47.22-56 31.79C5.89 228.63 1.02 221.64 1 208V15C1.09 8.68 2.31 4.99 8.04 1.74Z"/></svg>;
 
 
@@ -31,6 +31,8 @@ var firstTimeSignature = null;
 var playingSpeed = 1;   // Playback piano song speed (Integer)
 var playing = 1; // 1 for playing || 0 for not.
 
+var selectedImport = null;
+
 var tempo = 60;
 var timeSignature = 4/4;
 var currentTime = 0;
@@ -43,53 +45,79 @@ const allSharps = [];
 var mouseDown = false;
 var tempMode = "menu";
 
-var playerX, playerY, velX = 1, velY = 0;
+function Snake(){
+  this.head = {x: 0, y: 0};
+  this.length = 1;
+  this.direction = {x: 1, y: 0}
+  this.body = [
+    {x: 0, y: 1},
+  ]
+}
+
+function Food(x, y){
+  this.x = x;
+  this.y = y;
+}
+
+var player = new Snake();
+var food = new Food(5, 5);
+
+const handleFileChange = (file) => {
+  
+  if (file.type === "audio/mpeg" || file.type === "audio/wav" || file.type === "audio/ogg"){
+    allKeysMap.get(selectedImport).importAudio.setAttribute("src", URL.createObjectURL(file));
+    allKeysMap.get(selectedImport).importKey.classList.add("loaded");
+  }
+
+}
 
 var snakeMap = [];
+var spotAvailable = [];
+var snakeTickInterval = 1000 / 4;
 var allKeysMap = new Map();
-allKeysMap.set(49, {character: '1', preset: true, pressed: false, color: "blue"});
-allKeysMap.set(50, {character: '2', preset: true, pressed: false, color: "blue"});
-allKeysMap.set(51, {character: '3', preset: true, pressed: false, color: "blue"});
-allKeysMap.set(52, {character: '4', preset: true, pressed: false, color: "blue"});
-allKeysMap.set(53, {character: '5', preset: true, pressed: false, color: "blue"});
-allKeysMap.set(54, {character: '6', preset: true, pressed: false, color: "blue"});
-allKeysMap.set(55, {character: '7', preset: true, pressed: false, color: "red"});
-allKeysMap.set(56, {character: '8', preset: true, pressed: false, color: "red"});
-allKeysMap.set(57, {character: '9', preset: true, pressed: false, color: "red"});
-allKeysMap.set(48, {character: '0', preset: true, pressed: false, color: "red"});
-allKeysMap.set(81, {character: 'Q', preset: true, pressed: false, color: "red"});
-allKeysMap.set(87, {character: 'W', preset: true, pressed: false, color: "red"});
-allKeysMap.set(69, {character: 'E', preset: true, pressed: false, color: "green"});
-allKeysMap.set(82, {character: 'R', preset: true, pressed: false, color: "green"});
-allKeysMap.set(84, {character: 'T', preset: true, pressed: false, color: "green"});
-allKeysMap.set(89, {character: 'Y', preset: true, pressed: false, color: "green"});
-allKeysMap.set(85, {character: 'U', preset: true, pressed: false, color: "green"});
-allKeysMap.set(73, {character: 'I', preset: true, pressed: false, color: "green"});
-allKeysMap.set(79, {character: 'O', preset: true, pressed: false, color: "purple"});
-allKeysMap.set(80, {character: 'P', preset: true, pressed: false, color: "purple"});
-allKeysMap.set(65, {character: 'A', preset: true, pressed: false, color: "purple"});
-allKeysMap.set(83, {character: 'S', preset: true, pressed: false, color: "purple"});
-allKeysMap.set(68, {character: 'D', preset: true, pressed: false, color: "purple"});
-allKeysMap.set(70, {character: 'F', preset: true, pressed: false, color: "purple"});
-allKeysMap.set(71, {character: 'G', preset: true, pressed: false, color: "pink"});
-allKeysMap.set(72, {character: 'H', preset: true, pressed: false, color: "pink"});
-allKeysMap.set(74, {character: 'J', preset: true, pressed: false, color: "pink"});
-allKeysMap.set(75, {character: 'K', preset: true, pressed: false, color: "pink"});
-allKeysMap.set(76, {character: 'L', preset: true, pressed: false, color: "pink"});
-allKeysMap.set(90, {character: 'Z', preset: true, pressed: false, color: "pink"});
-allKeysMap.set(88, {character: 'X', preset: true, pressed: false, color: "orange"});
-allKeysMap.set(67, {character: 'C', preset: true, pressed: false, color: "orange"});
-allKeysMap.set(86, {character: 'V', preset: true, pressed: false, color: "orange"});
-allKeysMap.set(66, {character: 'B', preset: true, pressed: false, color: "orange"});
-allKeysMap.set(78, {character: 'N', preset: true, pressed: false, color: "orange"});
-allKeysMap.set(77, {character: 'M', preset: true, pressed: false, color: "orange"});
+allKeysMap.set(49, {character: '1', import: false, preset: true, pressed: false, color: "blue"});
+allKeysMap.set(50, {character: '2', import: false, preset: true, pressed: false, color: "blue"});
+allKeysMap.set(51, {character: '3', import: false, preset: true, pressed: false, color: "blue"});
+allKeysMap.set(52, {character: '4', import: true, preset: true, pressed: false, color: "blue"});
+allKeysMap.set(53, {character: '5', import: true, preset: true, pressed: false, color: "blue"});
+allKeysMap.set(54, {character: '6', import: true, preset: true, pressed: false, color: "blue"});
+allKeysMap.set(55, {character: '7', import: true, preset: true, pressed: false, color: "red"});
+allKeysMap.set(56, {character: '8', import: false, preset: true, pressed: false, color: "red"});
+allKeysMap.set(57, {character: '9', import: false, preset: true, pressed: false, color: "red"});
+allKeysMap.set(48, {character: '0', import: false, preset: true, pressed: false, color: "red"});
+allKeysMap.set(81, {character: 'Q', import: false, preset: true, pressed: false, color: "red"});
+allKeysMap.set(87, {character: 'W', import: false, preset: true, pressed: false, color: "red"});
+allKeysMap.set(69, {character: 'E', import: false, preset: true, pressed: false, color: "green"});
+allKeysMap.set(82, {character: 'R', import: true, preset: true, pressed: false, color: "green"});
+allKeysMap.set(84, {character: 'T', import: true, preset: true, pressed: false, color: "green"});
+allKeysMap.set(89, {character: 'Y', import: true, preset: true, pressed: false, color: "green"});
+allKeysMap.set(85, {character: 'U', import: true, preset: true, pressed: false, color: "green"});
+allKeysMap.set(73, {character: 'I', import: false, preset: true, pressed: false, color: "green"});
+allKeysMap.set(79, {character: 'O', import: false, preset: true, pressed: false, color: "purple"});
+allKeysMap.set(80, {character: 'P', import: false, preset: true, pressed: false, color: "purple"});
+allKeysMap.set(65, {character: 'A', import: false, preset: true, pressed: false, color: "purple"});
+allKeysMap.set(83, {character: 'S', import: false, preset: true, pressed: false, color: "purple"});
+allKeysMap.set(68, {character: 'D', import: false, preset: true, pressed: false, color: "purple"});
+allKeysMap.set(70, {character: 'F', import: true, preset: true, pressed: false, color: "purple"});
+allKeysMap.set(71, {character: 'G', import: true, preset: true, pressed: false, color: "pink"});
+allKeysMap.set(72, {character: 'H', import: true, preset: true, pressed: false, color: "pink"});
+allKeysMap.set(74, {character: 'J', import: true, preset: true, pressed: false, color: "pink"});
+allKeysMap.set(75, {character: 'K', import: false, preset: true, pressed: false, color: "pink"});
+allKeysMap.set(76, {character: 'L', import: false, preset: true, pressed: false, color: "pink"});
+allKeysMap.set(90, {character: 'Z', import: false, preset: true, pressed: false, color: "pink"});
+allKeysMap.set(88, {character: 'X', import: false, preset: true, pressed: false, color: "orange"});
+allKeysMap.set(67, {character: 'C', import: false, preset: true, pressed: false, color: "orange"});
+allKeysMap.set(86, {character: 'V', import: true, preset: true, pressed: false, color: "orange"});
+allKeysMap.set(66, {character: 'B', import: true, preset: true, pressed: false, color: "orange"});
+allKeysMap.set(78, {character: 'N', import: true, preset: true, pressed: false, color: "orange"});
+allKeysMap.set(77, {character: 'M', import: true, preset: true, pressed: false, color: "orange"});
 
-allKeysMap.set(188, {character: ',', preset: false, pressed: false, color: "orange"});
-allKeysMap.set(190, {character: '.', preset: false, pressed: false, color: "orange"});
-allKeysMap.set(186, {character: ';', preset: false, pressed: false, color: "orange"});
-allKeysMap.set(191, {character: '/', preset: false, pressed: false, color: "orange"});
-allKeysMap.set(222, {character: '\'', preset: false, pressed: false, color: "orange"});
-allKeysMap.set(16, {character: '⇧', preset: false, pressed: false, color: "orange"});
+allKeysMap.set(188, {character: ',', import: false, preset: false, pressed: false, color: "orange"});
+allKeysMap.set(190, {character: '.', import: false, preset: false, pressed: false, color: "orange"});
+allKeysMap.set(186, {character: ';', import: false, preset: false, pressed: false, color: "orange"});
+allKeysMap.set(191, {character: '/', import: false, preset: false, pressed: false, color: "orange"});
+allKeysMap.set(222, {character: '\'', import: false, preset: false, pressed: false, color: "orange"});
+allKeysMap.set(16, {character: '⇧', import: false, preset: false, pressed: false, color: "orange"});
 
 const pianoKeys = [81, 50, 87, 51, 69, 82, 53, 84, 54, 89, 55, 85, 73, 57, 79, 48, 80, 90, 83, 88, 68, 67, 70, 86, 66, 72, 78, 74, 77, 188, 76, 190, 186, 191, 222, 16];
 
@@ -107,14 +135,15 @@ function App() {
   const [playSnake, setPlaySnake] = useState(false);
   const [playingState, setPlayingState] = useState(playing); 
   const [playingSpeedState, setPlayingSpeedState] = useState(playingSpeed);
+  const [selectedImportState, setSelectedImportState] = useState(null); 
   const pianoNotes = useRef();
   const setMode = (temp) => {setSong(null); changeMode(temp); tempMode = temp;}
   const changePlayingSpeed = (temp) => {setPlayingSpeedState(temp); playingSpeed = temp;};
   const changePlaying = (temp) => {setPlayingState(temp); playing = temp;}
+  const changeSelected = (temp) => {selectedImport = temp; setSelectedImportState(temp);}
 
   var searchBar = document.querySelector(".searchbar");
   var pianoContainer = document.querySelector(".piano-holder");
-  //var actualPiano = document.querySelector(".piano");
   var searchResults = document.querySelector(".search-results");
   const searchIcon = <svg className="search-icon" onClick={() => {searchBar.focus();}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><path d="m22.79 23.32 10.85 10.25-10.85-10.25ZM1.98 13.93c0-6.6 5.67-11.96 12.66-11.96 7 0 12.67 5.36 12.67 11.96 0 6.6-5.67 11.95-12.67 11.95-6.99 0-12.66-5.35-12.66-11.95Z" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4"/></svg>;
 
@@ -125,6 +154,7 @@ function App() {
     var temp = 0;
     var pianoHolder = document.querySelector(".piano");
     var launchpad = document.querySelector(".launchpad");
+    var importPad = document.querySelector(".import-pad");
 
     var tempRow = [];
 
@@ -143,7 +173,7 @@ function App() {
       if (temp % 6 === 0 && temp !== 0) {snakeMap.push(tempRow); tempRow = [];}
       tempRow.push(value.presetKey);
 
-      var audioFile = require("./SoundPresets/JoeyTrap/note" + ((temp++ % 12) + 1) + ".ogg");
+      var audioFile = require("./SoundPresets/note" + (temp++ + 1) + ".ogg");
       var presetAudio = new Audio(audioFile);
       presetAudio.preload = "auto";
       value.presetAudio = presetAudio;
@@ -207,6 +237,7 @@ function App() {
 
       var audioFile = require("./oggNotes/note" + (i+1) + ".ogg");
       var pianoAudio = new Audio(audioFile);
+      //var pianoAudio = new Audio(URL.createObjectURL(audioFile));
       pianoAudio.preload = "auto";
       pianoAudio.volume = pianoVolume;
       allKeysMap.get(e).pianoAudio = pianoAudio;
@@ -237,6 +268,27 @@ function App() {
 
     });
 
+    for ([key, value] of allKeysMap) {
+      if (!value.import) continue;
+      var importButton = document.createElement("div");
+      var importSpan = document.createElement("span");
+      if (!selectedImport) {
+        changeSelected(key);
+        importButton.classList.add("selected");
+      }
+      importSpan.innerText = value.character;
+      importButton.appendChild(importSpan);
+      importButton.classList.add("button");
+      importPad.appendChild(importButton);
+      value.importKey = importButton;
+
+      var importAudio = new Audio(null);
+      value.importAudio = importAudio;
+
+      // Small little bug regarding Maps that send a pointer to the last button whenever attempting to make new eventListeners,
+      // Instead, pay attention to the next forEach loop, since all eventListeners are made there.
+    }
+
   }
 
   /* ------------------------------------------------------------------------- */
@@ -259,10 +311,10 @@ function App() {
         allKeysMap.get(e.keyCode).presetAudio.play();
       }
 
-      if (e.keyCode === 37) {velX = -1; velY = 0;}
-      else if (e.keyCode === 38) {velX = 0; velY = -1;}
-      else if (e.keyCode === 39) {velX = 1; velY = 0;}
-      else if (e.keyCode === 40) {velX = 0; velY = 1;}
+      if (e.keyCode === 37) {player.direction.x = -1; player.direction.y = 0;}
+      else if (e.keyCode === 38) {player.direction.x = 0; player.direction.y = -1;}
+      else if (e.keyCode === 39) {player.direction.x = 1; player.direction.y = 0;}
+      else if (e.keyCode === 40) {player.direction.x = 0; player.direction.y = 1;}
 
       // PIANO KEYS
       if (!document.activeElement.classList.contains("searchbar") && allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).pianoKey !== "undefined" && tempMode === "piano" && allKeysMap.get(e.keyCode).pressed === false) {
@@ -270,6 +322,28 @@ function App() {
         allKeysMap.get(e.keyCode).pianoKey.classList.add("pressed"); 
         allKeysMap.get(e.keyCode).pianoAudio.currentTime = 0; 
         allKeysMap.get(e.keyCode).pianoAudio.play();
+      }
+
+      // IMPORT KEYS
+
+      if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).importKey !== "undefined" && tempMode === "import" && allKeysMap.get(e.keyCode).pressed === false) {
+
+        for (var [key, value] of allKeysMap) {
+          if (!value.import) continue;
+          value.importKey.classList.remove("selected");
+          if (value.importAudio.getAttribute("src") !== "null") value.importKey.classList.add("loaded");
+        }
+
+        allKeysMap.get(e.keyCode).pressed = true;
+        changeSelected(e.keyCode);
+        allKeysMap.get(e.keyCode).importKey.classList.add("selected"); 
+
+        if (allKeysMap.get(e.keyCode).importAudio.getAttribute("src") !== "null"){
+          allKeysMap.get(e.keyCode).importKey.classList.add("pressed"); 
+          allKeysMap.get(e.keyCode).importAudio.currentTime = 0;
+          allKeysMap.get(e.keyCode).importAudio.play();
+        }
+
       }
 
     });
@@ -286,10 +360,21 @@ function App() {
         allKeysMap.get(e.keyCode).presetKey.classList.remove("pressed");
       }
 
+      // IMPORT KEYS
+
+      if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).importKey !== "undefined" && tempMode === "import" && allKeysMap.get(e.keyCode).pressed === true) {
+        allKeysMap.get(e.keyCode).pressed = false;
+        allKeysMap.get(e.keyCode).importKey.classList.remove("pressed"); 
+      }
+
     });
 
-    document.addEventListener("mousedown", () => {mouseDown = true});
-    document.addEventListener("mouseup", () => {mouseDown = false});
+    document.addEventListener("mousedown", (event) => {
+      if (event.button === 0) mouseDown = true
+    });
+    document.addEventListener("mouseup", (event) => {
+      if (event.button === 0) mouseDown = false
+    });
 
     window.addEventListener("blur", () => {
       mouseDown = false;
@@ -304,21 +389,169 @@ function App() {
 
   });
 
-  const snakeTick = () => { 
-
+  const snakeWin = () => {
     snakeMap.forEach((e) => {
       e.forEach((j) => {
         j.classList.remove("snake");
+        j.classList.remove("food");
+        j.classList.remove("body");
       });
     });
+    clearTimeout(snakeTick);
+    snakeMap.forEach((e) => {
+      e.forEach((j) => {
+        j.classList.add("snake");
+      });
+    });
+    setTimeout(() => {
+      snakeMap.forEach((e) => {
+        e.forEach((j) => {
+          j.classList.remove("snake");
+        });
+      });
+    }, 500);
+    setTimeout(() => {
+      snakeMap.forEach((e) => {
+        e.forEach((j) => {
+          j.classList.add("snake");
+        });
+      });
+    }, 1000);
+    setTimeout(() => {
+      snakeMap.forEach((e) => {
+        e.forEach((j) => {
+          j.classList.remove("snake");
+        });
+      });
+    }, 1500);
+    setTimeout(() => {
+      snakeMap.forEach((e) => {
+        e.forEach((j) => {
+          j.classList.add("snake");
+        });
+      });
+    }, 2000);
+    setTimeout(() => {
+      snakeMap.forEach((e) => {
+        e.forEach((j) => {
+          j.classList.remove("snake");
+        });
+      });
+      setPlaySnake(false);
+    }, 2500);
+  }
 
-    if ((playerY + velY) >= 0 && (playerY + velY) < snakeMap.length && (playerX + velX) >= 0 && (playerX + velX) < snakeMap[0].length){
-      playerX += velX;
-      playerY += velY;
-      snakeMap[playerY][playerX].classList.add("snake");
-    } else {
-      snakeMap[playerY][playerX].classList.add("snake");
-    }
+  const snakeLose = () => {
+    snakeMap.forEach((e) => {
+      e.forEach((j) => {
+        j.classList.remove("snake");
+        j.classList.remove("food");
+        j.classList.remove("body");
+      });
+    });
+    clearTimeout(snakeTick);
+    snakeMap.forEach((e) => {
+      e.forEach((j) => {
+        j.classList.add("food");
+      });
+    });
+    setTimeout(() => {
+      snakeMap.forEach((e) => {
+        e.forEach((j) => {
+          j.classList.remove("food");
+        });
+      });
+    }, 500);
+    setTimeout(() => {
+      snakeMap.forEach((e) => {
+        e.forEach((j) => {
+          j.classList.add("food");
+        });
+      });
+    }, 1000);
+    setTimeout(() => {
+      snakeMap.forEach((e) => {
+        e.forEach((j) => {
+          j.classList.remove("food");
+        });
+      });
+    }, 1500);
+    setTimeout(() => {
+      snakeMap.forEach((e) => {
+        e.forEach((j) => {
+          j.classList.add("food");
+        });
+      });
+    }, 2000);
+    setTimeout(() => {
+      snakeMap.forEach((e) => {
+        e.forEach((j) => {
+          j.classList.remove("food");
+        });
+      });
+      setPlaySnake(false);
+    }, 2500);
+  }
+
+  const snakeTick = () => { 
+
+    if ((player.head.y + player.direction.y) >= 0 && (player.head.y + player.direction.y) < snakeMap.length && (player.head.x + player.direction.x) >= 0 && (player.head.x + player.direction.x) < snakeMap[0].length){
+      
+      if (player.head.y + player.direction.y === food.y && food.x === player.head.x + player.direction.x) { // WHEN EAT THE FOOD
+        player.body.push({x: player.head.x, y: player.head.y});
+        player.length++;
+
+        if (player.length === 36) {snakeWin(); return;}
+
+        spotAvailable = [];
+
+        snakeMap.forEach((row, yPos) => {
+          row.forEach((element, xPos) => {
+            
+            if (element.classList.contains("snake") || element.classList.contains("body") || element.classList.contains("food")){}
+            else {
+              spotAvailable.push({x: xPos, y: yPos});
+            }
+
+          });
+        });
+
+        var newFood = spotAvailable[Math.floor(Math.random() * spotAvailable.length)];
+        food = new Food(newFood.x, newFood.y);
+      } else {
+        player.body.push({x: player.head.x, y: player.head.y});
+        player.body.splice(0, 1);
+      }
+      
+      player.head.x += player.direction.x;
+      player.head.y += player.direction.y;
+
+      if (snakeMap[player.head.y][player.head.x].classList.contains("body")){
+        snakeLose();
+        return;
+      }
+
+      snakeMap.forEach((e) => {
+        e.forEach((j) => {
+          j.classList.remove("snake");
+          j.classList.remove("body");
+          j.classList.remove('food');
+        });
+      });
+
+      snakeMap[player.head.y][player.head.x].classList.add("snake");
+
+      player.body.forEach((e) => {
+        snakeMap[e.y][e.x].classList.add("body");
+      })
+
+      snakeMap[food.y][food.x].classList.add("food");
+
+      setTimeout(() => {
+        snakeTick();
+      }, snakeTickInterval);
+
+    } else snakeLose();
 
   }
 
@@ -326,21 +559,20 @@ function App() {
 
     if (playSnake){ // Enter the Snake Minigame
 
-      playerX = Math.floor(Math.random() * snakeMap.length);
-      playerY = Math.floor(Math.random() * snakeMap.length);
-      snakeMap[playerY][playerX].classList.add("snake");
+      food = new Food(5, 5);
+      snakeMap[food.y][food.x].classList.add("food");
 
-      setInterval(() => {
+      player.head.x = 0;
+      player.head.y = 0;
+      player.direction.x = 1;
+      player.direction.y = 0;
+      player.length = 1;
+      player.body = [];
+      snakeMap[player.head.y][player.head.x].classList.add("snake");
+
+      setTimeout(() => {
         snakeTick();
-      }, 1000/5);
-
-    } else { // Exit the Snake Minigame
-
-      snakeMap.forEach((e) => {
-        e.forEach((j) => {
-          j.classList.remove("snake");
-        });
-      });
+      }, snakeTickInterval);
 
     }
 
@@ -650,12 +882,43 @@ function App() {
       </div>
 
       <div className={`page${mode === "import" ? " visible" : ""}`}>
+
         <div className="key-tube">
-          <div className="key">5</div>
+          <div className="import-pad">
+            <div className="launchpad-logo" onClick={() => {
+              for (var [key, value] of allKeysMap) {
+                if (!value.import) continue;
+                value.importAudio.pause();
+                value.importAudio.currentTime = 0;
+              }
+            }}>{logo}</div>
+          </div>
           <div className="audio-details">
-            Click or drag to input an audio clip.
+            <input multiple={false} className="ghst-input" type="file" accept="audio/mpeg, audio/wav, audio/ogg" onChange={(e) => {
+              if (e.target.files[0] !== null) {
+                var file = e.target.files[0];
+                handleFileChange(file);
+              }
+            }}></input>
+            <div className="drag-input" onClick={() => {
+              var button = document.querySelector(".ghst-input");
+              button.click();
+            }} 
+            onDragOver={(e) => {e.preventDefault();}}
+            onDragStart={(e) => {e.preventDefault();}}
+            onDrop={(e) => {e.preventDefault();
+              var file = e.dataTransfer.files[0];
+              handleFileChange(file);
+            }}
+            onDragEnd={(e) => {
+              e.preventDefault();
+              e.stopPropagation();}}>
+                {selectedImportState && allKeysMap.get(selectedImportState).importAudio.getAttribute("src") !== "null" ? <div>Hello</div> : <div>No</div>}
+                Click or drag to input an audio clip.
+            </div>
           </div>
         </div>
+
       </div>
 
     </>
