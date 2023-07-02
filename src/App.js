@@ -62,15 +62,6 @@ function Food(x, y){
 var player = new Snake();
 var food = new Food(5, 5);
 
-const handleFileChange = (file) => {
-  
-  if (file.type === "audio/mpeg" || file.type === "audio/wav" || file.type === "audio/ogg"){
-    allKeysMap.get(selectedImport).importAudio.setAttribute("src", URL.createObjectURL(file));
-    allKeysMap.get(selectedImport).importKey.classList.add("loaded");
-  }
-
-}
-
 var snakeMap = [];
 var spotAvailable = [];
 var snakeTickInterval = 1000 / 4;
@@ -136,11 +127,24 @@ function App() {
   const [playingState, setPlayingState] = useState(playing); 
   const [playingSpeedState, setPlayingSpeedState] = useState(playingSpeed);
   const [selectedImportState, setSelectedImportState] = useState(null); 
+  const [currentAudio, setCurrentAudio] = useState("null");
   const pianoNotes = useRef();
   const setMode = (temp) => {setSong(null); changeMode(temp); tempMode = temp;}
   const changePlayingSpeed = (temp) => {setPlayingSpeedState(temp); playingSpeed = temp;};
   const changePlaying = (temp) => {setPlayingState(temp); playing = temp;}
-  const changeSelected = (temp) => {selectedImport = temp; setSelectedImportState(temp);}
+  const changeSelected = (temp) => {selectedImport = temp; setSelectedImportState(temp); 
+    if (allKeysMap.get(selectedImport).importAudio) setCurrentAudio(allKeysMap.get(selectedImport).importAudio.getAttribute("src"));}
+
+    const handleFileChange = (file) => {
+  
+      if (typeof file === "undefined") return;
+      if (file.type === "audio/mpeg" || file.type === "audio/wav" || file.type === "audio/ogg"){
+        allKeysMap.get(selectedImport).importAudio.setAttribute("src", URL.createObjectURL(file));
+        allKeysMap.get(selectedImport).importKey.classList.add("loaded");
+        setCurrentAudio(allKeysMap.get(selectedImport).importAudio.getAttribute("src"));
+      }
+    
+    }
 
   var searchBar = document.querySelector(".searchbar");
   var pianoContainer = document.querySelector(".piano-holder");
@@ -285,9 +289,37 @@ function App() {
       var importAudio = new Audio(null);
       value.importAudio = importAudio;
 
-      // Small little bug regarding Maps that send a pointer to the last button whenever attempting to make new eventListeners,
-      // Instead, pay attention to the next forEach loop, since all eventListeners are made there.
     }
+
+    allKeysMap.forEach((e, i) => {
+
+      if (!e.import) return;
+
+      e.importKey.addEventListener("mousedown", () => {
+        e.importKey.classList.add("pressed");
+        setCurrentAudio(e.importAudio.getAttribute("src"));
+        if (e.importAudio.getAttribute("src") !== "null"){e.importAudio.currentTime = 0; e.importAudio.play();}
+      });
+
+      e.importKey.addEventListener("mouseup", () => {
+        e.importKey.classList.remove("pressed");
+      });
+
+      e.importKey.addEventListener("mouseenter", () => {
+        if (mouseDown === true){
+          e.importKey.classList.add("pressed");
+          setCurrentAudio(e.importAudio.getAttribute("src"));
+          if (e.importAudio.getAttribute("src") !== "null"){e.importAudio.currentTime = 0; e.importAudio.play();}
+        }
+      });
+
+      e.importKey.addEventListener("mouseout", () => {
+        if (e.importKey.classList.contains("pressed")){
+        e.importKey.classList.remove("pressed");
+        }
+      });
+
+    });
 
   }
 
@@ -382,6 +414,7 @@ function App() {
       for (var [key, value] of allKeysMap) {
         if (value.presetKey) value.presetKey.classList.remove("pressed");
         if (value.pianoKey) value.pianoKey.classList.remove("pressed");
+        if (value.importKey) value.importKey.classList.remove("pressed");
         value.pressed = false;
       }
 
@@ -913,7 +946,7 @@ function App() {
             onDragEnd={(e) => {
               e.preventDefault();
               e.stopPropagation();}}>
-                {selectedImportState && allKeysMap.get(selectedImportState).importAudio.getAttribute("src") !== "null" ? <div>Hello</div> : <div>No</div>}
+                {currentAudio !== "null" ? <div>SET | </div> : <div>NOT SET | </div>}
                 Click or drag to input an audio clip.
             </div>
           </div>

@@ -797,7 +797,7 @@ textarea:focus, input:focus{
   background-color: var(--importpad-button-hover);
 }
 
-.import-pad .button.loaded:hover {
+.import-pad .button.loaded:not(.pressed):hover {
   background-color: var(--importpad-loaded-button-hover);
 }
 
