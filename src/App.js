@@ -1,4 +1,5 @@
 import {useState, useEffect, useRef, useLayoutEffect} from 'react';
+import Knob from './Knob.js';
 import animation from './animation.js';
 import songs from './songs.js';
 
@@ -132,7 +133,10 @@ function App() {
   const setMode = (temp) => {setSong(null); changeMode(temp); tempMode = temp;}
   const changePlayingSpeed = (temp) => {setPlayingSpeedState(temp); playingSpeed = temp;};
   const changePlaying = (temp) => {setPlayingState(temp); playing = temp;}
-  const changeSelected = (temp) => {selectedImport = temp; setSelectedImportState(temp); 
+  const changeSelected = (temp) => {
+    if (typeof allKeysMap.get(selectedImport) !== "undefined") allKeysMap.get(selectedImport).importKey.classList.remove("selected"); 
+    selectedImport = temp; setSelectedImportState(temp); 
+    if (allKeysMap.get(temp).importKey) allKeysMap.get(temp).importKey.classList.add("selected"); 
     if (allKeysMap.get(selectedImport).importAudio) setCurrentAudio(allKeysMap.get(selectedImport).importAudio.getAttribute("src"));}
 
     const handleFileChange = (file) => {
@@ -297,6 +301,7 @@ function App() {
 
       e.importKey.addEventListener("mousedown", () => {
         e.importKey.classList.add("pressed");
+        changeSelected(i);
         setCurrentAudio(e.importAudio.getAttribute("src"));
         if (e.importAudio.getAttribute("src") !== "null"){e.importAudio.currentTime = 0; e.importAudio.play();}
       });
@@ -308,6 +313,7 @@ function App() {
       e.importKey.addEventListener("mouseenter", () => {
         if (mouseDown === true){
           e.importKey.classList.add("pressed");
+          changeSelected(i);
           setCurrentAudio(e.importAudio.getAttribute("src"));
           if (e.importAudio.getAttribute("src") !== "null"){e.importAudio.currentTime = 0; e.importAudio.play();}
         }
@@ -362,13 +368,11 @@ function App() {
 
         for (var [key, value] of allKeysMap) {
           if (!value.import) continue;
-          value.importKey.classList.remove("selected");
           if (value.importAudio.getAttribute("src") !== "null") value.importKey.classList.add("loaded");
         }
 
         allKeysMap.get(e.keyCode).pressed = true;
         changeSelected(e.keyCode);
-        allKeysMap.get(e.keyCode).importKey.classList.add("selected"); 
 
         if (allKeysMap.get(e.keyCode).importAudio.getAttribute("src") !== "null"){
           allKeysMap.get(e.keyCode).importKey.classList.add("pressed"); 
@@ -927,29 +931,28 @@ function App() {
             }}>{logo}</div>
           </div>
           <div className="audio-details">
-            <input multiple={false} className="ghst-input" type="file" accept="audio/mpeg, audio/wav, audio/ogg" onChange={(e) => {
-              if (e.target.files[0] !== null) {
-                var file = e.target.files[0];
-                handleFileChange(file);
-              }
-            }}></input>
-            <div className="drag-input" onClick={() => {
-              var button = document.querySelector(".ghst-input");
-              button.click();
-            }} 
-            onDragOver={(e) => {e.preventDefault();}}
-            onDragStart={(e) => {e.preventDefault();}}
-            onDrop={(e) => {e.preventDefault();
-              var file = e.dataTransfer.files[0];
-              handleFileChange(file);
-            }}
-            onDragEnd={(e) => {
-              e.preventDefault();
-              e.stopPropagation();}}>
-                {currentAudio !== "null" ? <div>SET | </div> : <div>NOT SET | </div>}
-                Click or drag to input an audio clip.
-            </div>
+            <input multiple={false} className="ghst-input" type="file" accept="audio/mpeg, audio/wav, audio/ogg" onChange={(e) => {if (e.target.files[0] !== null) {var file = e.target.files[0]; handleFileChange(file); }}}></input>
+            
+            {currentAudio !== "null" ? 
+              <div className="audio-options">
+
+                <Knob element={allKeysMap.get(selectedImportState).importAudio} type={"volume"} min={0.0} max={1.0} default={1.0} label={"Volume"}/>
+
+                <Knob element={allKeysMap.get(selectedImportState).importAudio} type={"speed"} min={0.25} max={4.0} default={1.0} label={"Speed"}/>
+
+              </div> 
+              :
+              <div className="drag-input" onClick={() => {var button = document.querySelector(".ghst-input"); button.click();}} 
+              onDragOver={(e) => {e.preventDefault();}}
+              onDragStart={(e) => {e.preventDefault();}}
+              onDrop={(e) => {e.preventDefault(); var file = e.dataTransfer.files[0]; handleFileChange(file); }}
+              onDragEnd={(e) => {e.preventDefault(); e.stopPropagation();}}>
+                <div>Click or drag to input an audio clip.</div>
+              </div>
+            }
+          
           </div>
+
         </div>
 
       </div>

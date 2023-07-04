@@ -6,6 +6,7 @@ body {
   font-style: normal;
   color: white;
   background-color: var(--main);
+  user-select: none;
 
 }
 
@@ -851,3 +852,63 @@ textarea:focus, input:focus{
 .button.selected {border: 2px solid hsla(0, 0%, 100%, 0.6);}
 
 .button.loaded {background-color: var(--blue); color: white}
+
+.option-holder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75em;
+}
+
+.option-knob {
+  width: 48px;
+  height: 48px;
+  background-color: rgb(58 58 58);
+  border-radius: 100%;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.option-knob::after {
+  content: "";
+  display: block;
+  width: 3px;
+  height: 20px;
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  border-radius: 6px;
+}
+
+.option-label {
+  width: 64px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  border: 2px solid #787878;
+  font-size: 0.7em;
+  text-transform: uppercase;
+  font-weight: 600;
+  height: 20px;
+  color: #787878;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: color .1s ease-in-out, border-color .1s ease-in-out;
+}
+
+.audio-options {
+  display: flex;
+  flex-direction: row;
+  gap: 2em;
+}
+
+.option-label.focused {
+  color: #fff;
+  border-color: #fff;
+}
