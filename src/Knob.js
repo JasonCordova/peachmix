@@ -25,7 +25,7 @@ const Knob = (props) => {
         var intA = -180 + maxThresh;
         var intB = -180 - maxThresh;
         if (degree < intA && degree > -180) degree = intA;
-        else if (degree > -270 && degree < intB) degree += 360;
+        else if (degree > -270 && degree <= intB) degree += 360;
         else if (degree < -180 && degree > intB) degree = intB + 360;
 
         element.current.style.transform = `rotate(${degree}deg)`;
@@ -41,12 +41,6 @@ const Knob = (props) => {
         }
     }
 
-    const convertToAngle = (x) => {
-        var realInterval = (x - props.min) / (props.max - props.min);
-        var realDegree = ((realInterval * 2) - 1) * 120;
-        return realDegree;
-    }
-
     const resetValue = (x) => {
         var realInterval = (x - props.min) / (props.max - props.min);
         var realDegree = ((realInterval * 2) - 1) * 120;
@@ -56,7 +50,7 @@ const Knob = (props) => {
         a = Math.floor(a * 100)/100;
         
         element.current.style.transform = `rotate(${realDegree}deg)`;
-        setValue(a.toFixed(2));
+        
         if (props.type === "volume"){
             props.element.volume = a.toFixed(2);
         }
@@ -64,16 +58,18 @@ const Knob = (props) => {
             props.element.playbackRate = a.toFixed(2);
         }
 
+        setValue(a.toFixed(2));
+
     }
 
     useEffect(() => {
-        element.current.style.transform = `rotate(${convertToAngle(props.default)}deg)`;
-    }, []);
+        resetValue(props.default);
+    }, [props.current]);
 
     return (
         <div className="option-holder">
-            <div ref={element} className="option-knob" onMouseLeave={() => {setFocus(false); setHover(false);}} onMouseMove={(e) => {if (focus) getAngle(e);}} onMouseOver={() => {setHover(true);}} onDoubleClick={() => {resetValue(props.default)}} onMouseDown={(e) => {getAngle(e); setFocus(true);}}></div>
-            <span draggable={false} className={`option-label ${focus || hover ? "focused" : ""}`}>
+            <div ref={element} className="option-knob" onMouseLeave={() => {setFocus(false); setHover(false);}} onMouseMove={(e) => {if (focus) getAngle(e);}} onMouseOver={() => {setHover(true);}} onDoubleClick={() => {resetValue(1.0)}} onMouseDown={(e) => {getAngle(e); setFocus(true);}}></div>
+            <span onMouseOver={() => {setHover(true);}} onMouseLeave={() => {setHover(false);}} draggable={false} className={`option-label ${focus || hover ? "focused" : ""}`}>
                 {focus || hover ? `${Math.floor(value * 100)}%` : props.label}
             </span>
         </div>

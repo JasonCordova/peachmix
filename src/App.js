@@ -1,8 +1,9 @@
 import {useState, useEffect, useRef, useLayoutEffect} from 'react';
 import Knob from './Knob.js';
+import ModeElement from './ModeElement.js';
+import AudioWave from './AudioWave.js';
 import animation from './animation.js';
 import songs from './songs.js';
-
 
 const logo = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M10 2C15.27.5 23.33.12 27.89 3.65c1.86 1.44 4.29 4.39 3.43 6.93-.89 2.62-5.01 3.15-7.32 2.8C17.64 12.43 12.89 7.37 10 2Zm25 10c6.05 0 10.91-.74 15.96 3.39C63.5 25.64 60.44 48.11 46 55c4.12-12.59 4.98-26.19-4.33-36.96L35 12Zm-19 2.11c4.85-.16 5.23 1.28 9 1.41 5.15.17 8.97-4.14 15.47 3.57C49.53 29.84 50.92 60 33 62.79 17.71 65.17-1.18 44.85 7.26 24c1.97-4.87 3.89-7.71 8.74-9.89Z"/></svg>;
 
@@ -12,7 +13,7 @@ const preset = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 278 216"><pa
 
 const pauseIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 384"><path d="M9 .57 35 0h45c12.78.06 15.98 4.81 16 17v350c-.02 13.19-3.81 16.98-17 17H15c-11.39-.14-14.95-5.11-15-16V15C.09 7.52 1.63 3.47 9 .57Zm160 0L195 0h45c12.78.06 15.98 4.81 16 17v350c-.02 13.19-3.81 16.98-17 17h-64c-11.39-.14-14.95-5.11-15-16V15c.09-7.48 1.63-11.53 9-14.43Z"/></svg>;
 const endIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M0 0h16v16H0Z"/></svg>;
-//const sizeIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 16"><path d="m23.88 16-.946-2.6h-4.582L17.39 16h-1.773l4.1-10.667h1.908L25.728 16Zm-4.988-4.056h3.5L20.651 7.2ZM12.395 16l-1.42-3.9H4.1L2.659 16H0L6.152 0h2.863l6.152 16ZM4.912 9.915h5.251l-2.614-7.12ZM18.509.037h4.7l-2.352 3.729Z"/></svg>;
+const rotateIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M50 16.15h180c25.26-.11 41.96 16.59 42 41.85v396c-.04 25.26-16.74 41.96-42 42H58c-25.26-.04-41.96-16.74-42-42V77c0-22.37-2.65-43.82 21-56.22 5.17-2.7 7.37-3.29 13-4.63ZM80 32c-17.22 0-40.34-4.24-46.95 17-1.16 3.73-1.04 6.19-1.05 10v394c.02 12.09 4.58 22.08 17 25.95 3.73 1.16 6.19 1.04 10 1.05h171c17.02-.08 25.97-10.4 26-27V58c-.05-9.48-2.79-16.65-11-22.15-8.6-5.76-26.57-3.85-37-3.85 0 12.02-.68 15.98-14 16H94c-9.44-.02-13.85-1.46-14-12v-4Zm243 51 8.62 12c2 2.72 4.17 5.44 4.17 9-.01 5.67-5.5 9.28-10.75 7.26-3.41-1.32-6.01-5.42-8.17-8.26l-16.83-22c-2.5-3.4-5.03-7.55-3.3-11.91 1.32-3.31 6.4-6.57 9.26-8.72l26-18.92c6.89-3.09 12.71 3 11.53 8.55-1.16 5.41-13.64 13.48-18.53 16 8.41 3.52 20.39 3.87 41 13.31 33.36 15.28 59.7 39.44 77.3 71.69 4.46 8.16 9.64 18.96 11.7 28h2c1.45-4.98 6.54-15.34 12.01-16.53 5.27-1.14 11.13 4 9.01 10.53l-15.87 28c-1.86 3.24-4.7 9-8.24 10.4-4.54 1.79-9.1-.98-12.91-3.12l-27-15.9c-3.71-2.35-7.36-5.42-6.34-10.36 2.2-10.69 14.02-4.16 19.34-1.03l14 8.01c-2-8.79-5.74-16.97-9.75-25-15.75-31.5-42.79-57.54-75.25-71.42-9.35-4-22.91-8.75-33-9.58Zm0-1h-1l1 1v-1Zm157 222c0-17.7 3.85-40.15-18-46.95-3.73-1.16-6.19-1.04-10-1.05H309c-2.77 0-6.43.21-8.89-1.17-4.82-2.72-5.26-9.78-.88-13.09 2.68-2.03 6.58-1.73 9.77-1.74h145c25.26.04 41.96 16.74 42 42v172c-.04 25.26-16.74 41.96-42 42H293c-3.19-.01-7.09.29-9.77-1.74-4.38-3.31-3.94-10.37.88-13.09 2.46-1.38 6.12-1.17 8.89-1.17h161c14.98-.18 25.82-11.02 26-26v-22c-11.88 0-15.98.64-16-13V317c.02-13.64 4.12-13 16-13Z"/></svg>;
 const playingIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 199 225"><path d="M8.04 1.74C18.72-.89 26.18 5.45 35 10.58l51 29.57 54 31.28 44 25.77c5.69 3.42 13.28 7.36 13.88 14.8.54 6.73-3.79 9.82-8.88 13.14l-31 18.06-82 47.22-56 31.79C5.89 228.63 1.02 221.64 1 208V15C1.09 8.68 2.31 4.99 8.04 1.74Z"/></svg>;
 
 
@@ -67,53 +68,98 @@ var snakeMap = [];
 var spotAvailable = [];
 var snakeTickInterval = 1000 / 4;
 var allKeysMap = new Map();
-allKeysMap.set(49, {character: '1', import: false, preset: true, pressed: false, color: "blue"});
-allKeysMap.set(50, {character: '2', import: false, preset: true, pressed: false, color: "blue"});
-allKeysMap.set(51, {character: '3', import: false, preset: true, pressed: false, color: "blue"});
-allKeysMap.set(52, {character: '4', import: true, preset: true, pressed: false, color: "blue"});
-allKeysMap.set(53, {character: '5', import: true, preset: true, pressed: false, color: "blue"});
-allKeysMap.set(54, {character: '6', import: true, preset: true, pressed: false, color: "blue"});
-allKeysMap.set(55, {character: '7', import: true, preset: true, pressed: false, color: "red"});
-allKeysMap.set(56, {character: '8', import: false, preset: true, pressed: false, color: "red"});
-allKeysMap.set(57, {character: '9', import: false, preset: true, pressed: false, color: "red"});
-allKeysMap.set(48, {character: '0', import: false, preset: true, pressed: false, color: "red"});
-allKeysMap.set(81, {character: 'Q', import: false, preset: true, pressed: false, color: "red"});
-allKeysMap.set(87, {character: 'W', import: false, preset: true, pressed: false, color: "red"});
-allKeysMap.set(69, {character: 'E', import: false, preset: true, pressed: false, color: "green"});
-allKeysMap.set(82, {character: 'R', import: true, preset: true, pressed: false, color: "green"});
-allKeysMap.set(84, {character: 'T', import: true, preset: true, pressed: false, color: "green"});
-allKeysMap.set(89, {character: 'Y', import: true, preset: true, pressed: false, color: "green"});
-allKeysMap.set(85, {character: 'U', import: true, preset: true, pressed: false, color: "green"});
-allKeysMap.set(73, {character: 'I', import: false, preset: true, pressed: false, color: "green"});
-allKeysMap.set(79, {character: 'O', import: false, preset: true, pressed: false, color: "purple"});
-allKeysMap.set(80, {character: 'P', import: false, preset: true, pressed: false, color: "purple"});
-allKeysMap.set(65, {character: 'A', import: false, preset: true, pressed: false, color: "purple"});
-allKeysMap.set(83, {character: 'S', import: false, preset: true, pressed: false, color: "purple"});
-allKeysMap.set(68, {character: 'D', import: false, preset: true, pressed: false, color: "purple"});
-allKeysMap.set(70, {character: 'F', import: true, preset: true, pressed: false, color: "purple"});
-allKeysMap.set(71, {character: 'G', import: true, preset: true, pressed: false, color: "pink"});
-allKeysMap.set(72, {character: 'H', import: true, preset: true, pressed: false, color: "pink"});
-allKeysMap.set(74, {character: 'J', import: true, preset: true, pressed: false, color: "pink"});
-allKeysMap.set(75, {character: 'K', import: false, preset: true, pressed: false, color: "pink"});
-allKeysMap.set(76, {character: 'L', import: false, preset: true, pressed: false, color: "pink"});
-allKeysMap.set(90, {character: 'Z', import: false, preset: true, pressed: false, color: "pink"});
-allKeysMap.set(88, {character: 'X', import: false, preset: true, pressed: false, color: "orange"});
-allKeysMap.set(67, {character: 'C', import: false, preset: true, pressed: false, color: "orange"});
-allKeysMap.set(86, {character: 'V', import: true, preset: true, pressed: false, color: "orange"});
-allKeysMap.set(66, {character: 'B', import: true, preset: true, pressed: false, color: "orange"});
-allKeysMap.set(78, {character: 'N', import: true, preset: true, pressed: false, color: "orange"});
-allKeysMap.set(77, {character: 'M', import: true, preset: true, pressed: false, color: "orange"});
 
-allKeysMap.set(188, {character: ',', import: false, preset: false, pressed: false, color: "orange"});
-allKeysMap.set(190, {character: '.', import: false, preset: false, pressed: false, color: "orange"});
-allKeysMap.set(186, {character: ';', import: false, preset: false, pressed: false, color: "orange"});
-allKeysMap.set(191, {character: '/', import: false, preset: false, pressed: false, color: "orange"});
-allKeysMap.set(222, {character: '\'', import: false, preset: false, pressed: false, color: "orange"});
-allKeysMap.set(16, {character: '⇧', import: false, preset: false, pressed: false, color: "orange"});
+allKeysMap.set(49, {character: '1', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "blue"});
+allKeysMap.set(50, {character: '2', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "blue"});
+allKeysMap.set(51, {character: '3', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "blue"});
+allKeysMap.set(52, {character: '4', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "blue", mode: "oneshot"});
+allKeysMap.set(53, {character: '5', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "blue", mode: "oneshot"});
+allKeysMap.set(54, {character: '6', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "blue", mode: "oneshot"});
+allKeysMap.set(55, {character: '7', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "red", mode: "oneshot"});
+allKeysMap.set(56, {character: '8', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "red"});
+allKeysMap.set(57, {character: '9', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "red"});
+allKeysMap.set(48, {character: '0', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "red"});
+allKeysMap.set(81, {character: 'Q', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "red"});
+allKeysMap.set(87, {character: 'W', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "red"});
+allKeysMap.set(69, {character: 'E', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "green"});
+allKeysMap.set(82, {character: 'R', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "green", mode: "oneshot"});
+allKeysMap.set(84, {character: 'T', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "green", mode: "oneshot"});
+allKeysMap.set(89, {character: 'Y', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "green", mode: "oneshot"});
+allKeysMap.set(85, {character: 'U', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "green", mode: "oneshot"});
+allKeysMap.set(73, {character: 'I', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "green"});
+allKeysMap.set(79, {character: 'O', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "purple"});
+allKeysMap.set(80, {character: 'P', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "purple"});
+allKeysMap.set(65, {character: 'A', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "purple"});
+allKeysMap.set(83, {character: 'S', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "purple"});
+allKeysMap.set(68, {character: 'D', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "purple"});
+allKeysMap.set(70, {character: 'F', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "purple", mode: "oneshot"});
+allKeysMap.set(71, {character: 'G', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "pink", mode: "oneshot"});
+allKeysMap.set(72, {character: 'H', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "pink", mode: "oneshot"});
+allKeysMap.set(74, {character: 'J', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "pink", mode: "oneshot"});
+allKeysMap.set(75, {character: 'K', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "pink"});
+allKeysMap.set(76, {character: 'L', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "pink"});
+allKeysMap.set(90, {character: 'Z', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "pink"});
+allKeysMap.set(88, {character: 'X', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "orange"});
+allKeysMap.set(67, {character: 'C', import: false, preset: true, pressed: false, clicked: false, touched: false, color: "orange"});
+allKeysMap.set(86, {character: 'V', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "orange", mode: "oneshot"});
+allKeysMap.set(66, {character: 'B', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "orange", mode: "oneshot"});
+allKeysMap.set(78, {character: 'N', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "orange", mode: "oneshot"});
+allKeysMap.set(77, {character: 'M', import: true, preset: true, pressed: false, clicked: false, touched: false, color: "orange", mode: "oneshot"});
+allKeysMap.set(188, {character: ',', import: false, preset: false, pressed: false, clicked: false, touched: false, color: "orange"});
+allKeysMap.set(190, {character: '.', import: false, preset: false, pressed: false, clicked: false, touched: false, color: "orange"});
+allKeysMap.set(186, {character: ';', import: false, preset: false, pressed: false, clicked: false, touched: false, color: "orange"});
+allKeysMap.set(191, {character: '/', import: false, preset: false, pressed: false, clicked: false, touched: false, color: "orange"});
+allKeysMap.set(222, {character: '\'', import: false, preset: false, pressed: false, clicked: false, touched: false, color: "orange"});
+allKeysMap.set(16, {character: '⇧', import: false, preset: false, pressed: false, clicked: false, touched: false, color: "orange"});
 
 const pianoKeys = [81, 50, 87, 51, 69, 82, 53, 84, 54, 89, 55, 85, 73, 57, 79, 48, 80, 90, 83, 88, 68, 67, 70, 86, 66, 72, 78, 74, 77, 188, 76, 190, 186, 191, 222, 16];
 
-const getTimeDifference = () => {
+const getPresetFromTouch = function(temp){
+
+  var x = temp.clientX;
+  var y = temp.clientY;
+  for (var [key, value] of allKeysMap) {
+    if (!value.preset) continue;
+    var bounds = value.presetKey.getBoundingClientRect();
+    if (x >= bounds.left && x <= bounds.right && y >= bounds.top && y <= bounds.bottom){
+      return key;
+    } else continue;
+  }
+  return null;
+
+};
+
+const getPianoFromTouch = function(temp){
+
+  var x = temp.clientX;
+  var y = temp.clientY;
+  for (var [key, value] of allKeysMap) {
+    if (!value.pianoKey) continue;
+    var bounds = value.pianoKey.getBoundingClientRect();
+    if (x >= bounds.left && x <= bounds.right && y >= bounds.top && y <= bounds.bottom){
+      return key;
+    } else continue;
+  }
+  return null;
+
+};
+
+const resetPianoTouches = function(temp){
+
+  for (var [key, value] of allKeysMap) {
+
+    if (temp === key) continue;
+    allKeysMap.get(key).touched = false;
+    if (!value.pianoKey) continue;
+
+    if (!allKeysMap.get(key).pressed && !allKeysMap.get(key).touched && !allKeysMap.get(key).clicked)
+          allKeysMap.get(key).pianoKey.classList.remove("pressed");
+    
+  }
+
+}
+
+const getTimeDifference = function(){
 
   var temp = startTime;
   startTime = new Date();
@@ -130,40 +176,41 @@ function App() {
   const [selectedImportState, setSelectedImportState] = useState(null); 
   const [currentAudio, setCurrentAudio] = useState("null");
   const pianoNotes = useRef();
-  const setMode = (temp) => {setSong(null); changeMode(temp); tempMode = temp;}
-  const changePlayingSpeed = (temp) => {setPlayingSpeedState(temp); playingSpeed = temp;};
-  const changePlaying = (temp) => {setPlayingState(temp); playing = temp;}
-  const changeSelected = (temp) => {
+  const pianoObject = useRef();
+  const launchpadObject = useRef();
+  const setMode = function(temp){setSong(null); changeMode(temp); tempMode = temp;}
+  const changePlayingSpeed = function(temp){setPlayingSpeedState(temp); playingSpeed = temp;};
+  const changePlaying = function(temp){setPlayingState(temp); playing = temp;}
+  const changeSelected = function(temp){
     if (typeof allKeysMap.get(selectedImport) !== "undefined") allKeysMap.get(selectedImport).importKey.classList.remove("selected"); 
     selectedImport = temp; setSelectedImportState(temp); 
     if (allKeysMap.get(temp).importKey) allKeysMap.get(temp).importKey.classList.add("selected"); 
-    if (allKeysMap.get(selectedImport).importAudio) setCurrentAudio(allKeysMap.get(selectedImport).importAudio.getAttribute("src"));}
+    if (allKeysMap.get(selectedImport).importAudio) setCurrentAudio(allKeysMap.get(selectedImport).importAudio.getAttribute("src"));
+  }
 
-    const handleFileChange = (file) => {
-  
-      if (typeof file === "undefined") return;
-      if (file.type === "audio/mpeg" || file.type === "audio/wav" || file.type === "audio/ogg"){
-        allKeysMap.get(selectedImport).importAudio.setAttribute("src", URL.createObjectURL(file));
-        allKeysMap.get(selectedImport).importKey.classList.add("loaded");
-        setCurrentAudio(allKeysMap.get(selectedImport).importAudio.getAttribute("src"));
-      }
-    
+   const handleFileChange = function(file){
+    if (typeof file === "undefined") return;
+    if (file.type === "audio/mpeg" || file.type === "audio/wav" || file.type === "audio/ogg"){
+      allKeysMap.get(selectedImport).importAudioTitle = file.name;
+      allKeysMap.get(selectedImport).importAudio.setAttribute("src", URL.createObjectURL(file));
+      allKeysMap.get(selectedImport).importKey.classList.add("loaded");
+      setCurrentAudio(allKeysMap.get(selectedImport).importAudio.getAttribute("src"));
     }
+  }
 
   var searchBar = document.querySelector(".searchbar");
   var pianoContainer = document.querySelector(".piano-holder");
   var searchResults = document.querySelector(".search-results");
-  const searchIcon = <svg className="search-icon" onClick={() => {searchBar.focus();}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><path d="m22.79 23.32 10.85 10.25-10.85-10.25ZM1.98 13.93c0-6.6 5.67-11.96 12.66-11.96 7 0 12.67 5.36 12.67 11.96 0 6.6-5.67 11.95-12.67 11.95-6.99 0-12.66-5.35-12.66-11.95Z" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4"/></svg>;
+  const searchIcon = <svg className="search-icon" onClick={function(){searchBar.focus();}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><path d="m22.79 23.32 10.85 10.25-10.85-10.25ZM1.98 13.93c0-6.6 5.67-11.96 12.66-11.96 7 0 12.67 5.36 12.67 11.96 0 6.6-5.67 11.95-12.67 11.95-6.99 0-12.66-5.35-12.66-11.95Z" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4"/></svg>;
 
   /* ------------------------ INITIALIZATION FUNCTION ------------------------ */
 
-  const init = () => {
+  const init = function(){
 
     var temp = 0;
     var pianoHolder = document.querySelector(".piano");
     var launchpad = document.querySelector(".launchpad");
     var importPad = document.querySelector(".import-pad");
-
     var tempRow = [];
 
     for (var [key, value] of allKeysMap) {
@@ -181,10 +228,10 @@ function App() {
       if (temp % 6 === 0 && temp !== 0) {snakeMap.push(tempRow); tempRow = [];}
       tempRow.push(value.presetKey);
 
-      var audioFile = require("./SoundPresets/note" + (temp++ + 1) + ".ogg");
-      var presetAudio = new Audio(audioFile);
-      presetAudio.preload = "auto";
-      value.presetAudio = presetAudio;
+      var audioFile = require("./SoundPresetsMP3/note" + (temp++ + 1) + ".mp3");
+      var audioObject = new Audio(audioFile);
+      audioObject.preload = "auto";
+      value.presetAudio = audioObject;
 
       // Small little bug regarding Maps that send a pointer to the last button whenever attempting to make new eventListeners,
       // Instead, pay attention to the next forEach loop, since all eventListeners are made there.
@@ -192,39 +239,61 @@ function App() {
 
     snakeMap.push(tempRow); // Makes sure to get the last row for the Snake Map.
 
-    allKeysMap.forEach((e, i) => {
+    allKeysMap.forEach(function(e, i){
 
       if (!e.preset) return;
 
-      e.presetKey.addEventListener("mousedown", () => {
+      e.presetKey.addEventListener("mousedown", function(){
         e.presetKey.classList.add("pressed");
         e.presetAudio.currentTime = 0;
         e.presetAudio.play();
+        e.clicked = true;
       });
 
-      e.presetKey.addEventListener("mouseup", () => {
-        e.presetKey.classList.remove("pressed");
+      e.presetKey.addEventListener("mouseup", function(){
+        e.clicked = false;
+        if (!e.pressed && !e.touched && !e.clicked)
+          e.presetKey.classList.remove("pressed");
       });
 
-      e.presetKey.addEventListener("mouseenter", () => {
+      e.presetKey.addEventListener("mouseenter", function(){
         if (mouseDown === true){
+          e.presetKey.classList.add("pressed");
+          e.presetAudio.currentTime = 0;
+          e.presetAudio.play();
+          e.clicked = true;
+        }
+      });
+
+      e.presetKey.addEventListener("mouseout", function(){
+        e.clicked = false;
+        if (!e.pressed && !e.touched && !e.clicked)
+          e.presetKey.classList.remove("pressed");
+      });
+
+      /* ----------- IOS ------------- */
+
+      
+      e.presetKey.addEventListener("touchstart", function(){
+        if (!e.touched){
+          e.touched = true;
           e.presetKey.classList.add("pressed");
           e.presetAudio.currentTime = 0;
           e.presetAudio.play();
         }
       });
 
-      e.presetKey.addEventListener("mouseout", () => {
-        if (e.presetKey.classList.contains("pressed")){
+      e.presetKey.addEventListener("touchend", function(){
+        e.touched = false;
         e.presetKey.classList.remove("pressed");
-        }
       });
+      
 
     });
 
     temp = 0;
 
-    pianoKeys.forEach((e, i) => {
+    pianoKeys.forEach(function(e, i){
       var newKey = document.createElement("div");
       var newText = document.createElement("span");
 
@@ -243,35 +312,54 @@ function App() {
       pianoHolder.appendChild(newKey);
       allKeysMap.get(e).pianoKey = newKey;
 
-      var audioFile = require("./oggNotes/note" + (i+1) + ".ogg");
+      var audioFile = require("./PianoNotesMP3/note" + (i+1) + ".mp3");
+
       var pianoAudio = new Audio(audioFile);
-      //var pianoAudio = new Audio(URL.createObjectURL(audioFile));
       pianoAudio.preload = "auto";
       pianoAudio.volume = pianoVolume;
       allKeysMap.get(e).pianoAudio = pianoAudio;
 
-      newKey.addEventListener("mousedown", () => {
+      newKey.addEventListener("mousedown", function(){
+        allKeysMap.get(e).clicked = true;
         newKey.classList.add("pressed");
         pianoAudio.currentTime = 0;
         pianoAudio.play();
       });
 
-      newKey.addEventListener("mouseup", () => {
-        newKey.classList.remove("pressed");
+      newKey.addEventListener("mouseup", function(){
+        allKeysMap.get(e).clicked = false;
+        if (!allKeysMap.get(e).pressed && !allKeysMap.get(e).touched && !allKeysMap.get(e).clicked)
+          newKey.classList.remove("pressed");
       });
 
-      newKey.addEventListener("mouseenter", () => {
+      newKey.addEventListener("mouseenter", function(){
         if (mouseDown === true){
+          allKeysMap.get(e).clicked = true;
           newKey.classList.add("pressed");
           pianoAudio.currentTime = 0;
           pianoAudio.play();
         }
       });
 
-      newKey.addEventListener("mouseout", () => {
-        if (newKey.classList.contains("pressed")){
-        newKey.classList.remove("pressed");
-        }
+      newKey.addEventListener("mouseout", function(){
+        allKeysMap.get(e).clicked = false;
+        if (!allKeysMap.get(e).pressed && !allKeysMap.get(e).touched && !allKeysMap.get(e).clicked)
+          newKey.classList.remove("pressed");
+      });
+
+      /* ----------- IOS ------------- */
+
+      newKey.addEventListener("touchstart", function(){
+        allKeysMap.get(e).touched = true;
+        newKey.classList.add("pressed");
+        pianoAudio.currentTime = 0;
+        pianoAudio.play();
+      });
+
+      newKey.addEventListener("touchend", function(){
+        allKeysMap.get(e).touched = false;
+        if (!allKeysMap.get(e).pressed && !allKeysMap.get(e).touched && !allKeysMap.get(e).clicked)
+          newKey.classList.remove("pressed");
       });
 
     });
@@ -295,22 +383,46 @@ function App() {
 
     }
 
-    allKeysMap.forEach((e, i) => {
+    allKeysMap.forEach(function(e, i){
 
       if (!e.import) return;
 
-      e.importKey.addEventListener("mousedown", () => {
+      e.importKey.addEventListener("mousedown", function(){
         e.importKey.classList.add("pressed");
         changeSelected(i);
         setCurrentAudio(e.importAudio.getAttribute("src"));
         if (e.importAudio.getAttribute("src") !== "null"){e.importAudio.currentTime = 0; e.importAudio.play();}
       });
 
-      e.importKey.addEventListener("mouseup", () => {
+      e.importKey.addEventListener("mouseup", function(){
         e.importKey.classList.remove("pressed");
+
+        if (e.mode === "gate" || e.mode === "loop"){
+          e.importAudio.pause();
+          e.importAudio.currentTime = 0;
+        }
+
       });
 
-      e.importKey.addEventListener("mouseenter", () => {
+      e.importKey.addEventListener("touchstart", function(){
+        e.importKey.classList.add("pressed");
+        if (e.mode === "gate" || e.mode === "loop"){
+          e.importAudio.currentTime = 0;
+          e.importAudio.play();
+        }
+
+      });
+
+      e.importKey.addEventListener("touchend", function(){
+        e.importKey.classList.remove("pressed");
+
+        if (e.mode === "gate" || e.mode === "loop"){
+          e.importAudio.pause();
+          e.importAudio.currentTime = 0;
+        }
+      });
+
+      e.importKey.addEventListener("mouseenter", function(){
         if (mouseDown === true){
           e.importKey.classList.add("pressed");
           changeSelected(i);
@@ -319,10 +431,16 @@ function App() {
         }
       });
 
-      e.importKey.addEventListener("mouseout", () => {
+      e.importKey.addEventListener("mouseout", function(){
         if (e.importKey.classList.contains("pressed")){
         e.importKey.classList.remove("pressed");
         }
+
+        if (e.mode === "gate" || e.mode === "loop"){
+          e.importAudio.pause();
+          e.importAudio.currentTime = 0;
+        }
+        
       });
 
     });
@@ -331,12 +449,59 @@ function App() {
 
   /* ------------------------------------------------------------------------- */
 
-  window.addEventListener("load", () => {
+  useEffect(function(){
 
     init();
 
+    launchpadObject.current.addEventListener("touchstart", function(e){e.preventDefault();}, {passive: false});
+    launchpadObject.current.addEventListener("touchmove", function(e){
+
+      e.preventDefault();
+      var keyFromElement = getPresetFromTouch(e.changedTouches[0]);
+      if (keyFromElement !== null){
+        if (!allKeysMap.get(keyFromElement).touched){
+          allKeysMap.get(keyFromElement).presetKey.classList.add("pressed");
+          allKeysMap.get(keyFromElement).presetAudio.currentTime = 0;
+          allKeysMap.get(keyFromElement).presetAudio.play();
+          allKeysMap.get(keyFromElement).touched = true;
+        }
+      } else {
+        for (var [key, value] of allKeysMap) {
+          value.touched = false;
+          if (!value.presetKey) continue;
+          if (!value.pressed && !value.touched && !value.clicked)
+            value.presetKey.classList.remove("pressed");
+        }
+      }
+
+    }, {passive: false});
+
+    pianoObject.current.addEventListener("touchstart", function(e){e.preventDefault();}, {passive: false});
+    pianoObject.current.addEventListener("touchmove", function(e){
+
+      e.preventDefault();
+      var keyFromElement = getPianoFromTouch(e.changedTouches[0]);
+      if (keyFromElement !== null){
+        resetPianoTouches(keyFromElement);
+        if (!allKeysMap.get(keyFromElement).touched){
+          allKeysMap.get(keyFromElement).pianoKey.classList.add("pressed");
+          allKeysMap.get(keyFromElement).pianoAudio.currentTime = 0;
+          allKeysMap.get(keyFromElement).pianoAudio.play();
+          allKeysMap.get(keyFromElement).touched = true;
+        }
+      } else {
+        for (var [key, value] of allKeysMap) {
+          e.touched = false;
+          if (!value.pianoKey) continue;
+          if (!value.pressed && !value.touched && !value.clicked)
+            value.pianoKey.classList.remove("pressed");
+        }
+      }
+
+    }, {passive: false});
+
     // Used a static variable, tempMode, instead of the declared state variable, mode, due to re-rendering issues - an honest small work around.
-    document.addEventListener("keydown", (e) => {
+    document.addEventListener("keydown", function(e){
 
       if (e.repeat) return; 
 
@@ -382,95 +547,114 @@ function App() {
 
       }
 
-    });
+    }, false);
 
-    document.addEventListener("keyup", (e) => {
+    document.addEventListener("keyup", function(e){
+
       if (e.repeat) return; 
-      if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).pianoKey !== "undefined" && tempMode === "piano" && allKeysMap.get(e.keyCode).pressed === true) {
+
+      // PIANO MODE
+
+      if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).pianoKey !== "undefined" && tempMode === "piano") {
         allKeysMap.get(e.keyCode).pressed = false;
-        allKeysMap.get(e.keyCode).pianoKey.classList.remove("pressed");
+        if (!allKeysMap.get(e.keyCode).pressed && !allKeysMap.get(e.keyCode).touched && !allKeysMap.get(e.keyCode).clicked)
+          allKeysMap.get(e.keyCode).pianoKey.classList.remove("pressed");
       }
 
-      if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).presetKey !== "undefined" && tempMode === "preset" && allKeysMap.get(e.keyCode).pressed === true) {
+      // PRESET MODE
+
+      if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).presetKey !== "undefined" && tempMode === "preset") {
         allKeysMap.get(e.keyCode).pressed = false;
-        allKeysMap.get(e.keyCode).presetKey.classList.remove("pressed");
+        if (!allKeysMap.get(e.keyCode).pressed && !allKeysMap.get(e.keyCode).touched && !allKeysMap.get(e.keyCode).clicked)
+          allKeysMap.get(e.keyCode).presetKey.classList.remove("pressed");
       }
 
       // IMPORT KEYS
 
-      if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).importKey !== "undefined" && tempMode === "import" && allKeysMap.get(e.keyCode).pressed === true) {
+      if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).importKey !== "undefined" && tempMode === "import") {
         allKeysMap.get(e.keyCode).pressed = false;
-        allKeysMap.get(e.keyCode).importKey.classList.remove("pressed"); 
+        if (!allKeysMap.get(e.keyCode).pressed && !allKeysMap.get(e.keyCode).touched && !allKeysMap.get(e.keyCode).clicked)
+          allKeysMap.get(e.keyCode).importKey.classList.remove("pressed"); 
+        if (allKeysMap.get(e.keyCode).mode === "gate" || allKeysMap.get(e.keyCode).mode === "loop"){
+          allKeysMap.get(e.keyCode).importAudio.pause();
+          allKeysMap.get(e.keyCode).importAudio.currentTime = 0;
+        } else if (allKeysMap.get(e.keyCode).mode === "oneshot"){
+
+        }
       }
 
     });
 
-    document.addEventListener("mousedown", (event) => {
-      if (event.button === 0) mouseDown = true
-    });
-    document.addEventListener("mouseup", (event) => {
-      if (event.button === 0) mouseDown = false
-    });
+      document.addEventListener("mousedown", function(event){
+        if (event.button === 0) mouseDown = true;
+      });
+      document.addEventListener("mouseup", function(event){
+        if (event.button === 0) mouseDown = false;
+      });
 
-    window.addEventListener("blur", () => {
-      mouseDown = false;
+      window.addEventListener("blur", function(){
+        mouseDown = false;
 
-      for (var [key, value] of allKeysMap) {
-        if (value.presetKey) value.presetKey.classList.remove("pressed");
-        if (value.pianoKey) value.pianoKey.classList.remove("pressed");
-        if (value.importKey) value.importKey.classList.remove("pressed");
-        value.pressed = false;
-      }
+        for (var [key, value] of allKeysMap) {
+          if (value.presetKey) value.presetKey.classList.remove("pressed");
+          if (value.pianoKey) value.pianoKey.classList.remove("pressed");
+          if (value.importKey) value.importKey.classList.remove("pressed");
+          value.pressed = false;
+          value.clicked = false;
+          value.touched = false;
+        }
 
-    });
+      });
 
-  });
+  }, []);
 
-  const snakeWin = () => {
-    snakeMap.forEach((e) => {
-      e.forEach((j) => {
+  /* ------------------------------------------------------------------------- */
+
+  const snakeWin = function(){
+    snakeMap.forEach(function(e){
+      e.forEach(function(j){
         j.classList.remove("snake");
         j.classList.remove("food");
         j.classList.remove("body");
       });
     });
     clearTimeout(snakeTick);
-    snakeMap.forEach((e) => {
-      e.forEach((j) => {
+    snakeMap.forEach(function(e){
+      e.forEach(function(j){
         j.classList.add("snake");
       });
     });
-    setTimeout(() => {
-      snakeMap.forEach((e) => {
-        e.forEach((j) => {
+    setTimeout(function(){
+      snakeMap.forEach(function(e){
+        e.forEach(function(j){
           j.classList.remove("snake");
         });
       });
     }, 500);
-    setTimeout(() => {
-      snakeMap.forEach((e) => {
-        e.forEach((j) => {
+    setTimeout(function(){
+      snakeMap.forEach(function(e){
+        e.forEach(function(j){
           j.classList.add("snake");
         });
       });
     }, 1000);
-    setTimeout(() => {
-      snakeMap.forEach((e) => {
-        e.forEach((j) => {
+    setTimeout(function(){
+      snakeMap.forEach(function(e){
+        e.forEach(function(j){
           j.classList.remove("snake");
         });
       });
     }, 1500);
-    setTimeout(() => {
-      snakeMap.forEach((e) => {
-        e.forEach((j) => {
+    setTimeout(function(){
+      snakeMap.forEach(function(e){
+        e.forEach(function(j){
           j.classList.add("snake");
         });
       });
     }, 2000);
-    setTimeout(() => {
-      snakeMap.forEach((e) => {
-        e.forEach((j) => {
+    setTimeout(function(){
+      snakeMap.forEach(function(e){
+        e.forEach(function(j){
           j.classList.remove("snake");
         });
       });
@@ -478,51 +662,51 @@ function App() {
     }, 2500);
   }
 
-  const snakeLose = () => {
-    snakeMap.forEach((e) => {
-      e.forEach((j) => {
+  const snakeLose = function(){
+    snakeMap.forEach(function(e){
+      e.forEach(function(j){
         j.classList.remove("snake");
         j.classList.remove("food");
         j.classList.remove("body");
       });
     });
     clearTimeout(snakeTick);
-    snakeMap.forEach((e) => {
-      e.forEach((j) => {
+    snakeMap.forEach(function(e){
+      e.forEach(function(j){
         j.classList.add("food");
       });
     });
-    setTimeout(() => {
-      snakeMap.forEach((e) => {
-        e.forEach((j) => {
+    setTimeout(function(){
+      snakeMap.forEach(function(e){
+        e.forEach(function(j){
           j.classList.remove("food");
         });
       });
     }, 500);
-    setTimeout(() => {
-      snakeMap.forEach((e) => {
-        e.forEach((j) => {
+    setTimeout(function(){
+      snakeMap.forEach(function(e){
+        e.forEach(function(j){
           j.classList.add("food");
         });
       });
     }, 1000);
-    setTimeout(() => {
-      snakeMap.forEach((e) => {
-        e.forEach((j) => {
+    setTimeout(function(){
+      snakeMap.forEach(function(e){
+        e.forEach(function(j){
           j.classList.remove("food");
         });
       });
     }, 1500);
-    setTimeout(() => {
-      snakeMap.forEach((e) => {
-        e.forEach((j) => {
+    setTimeout(function(){
+      snakeMap.forEach(function(e){
+        e.forEach(function(j){
           j.classList.add("food");
         });
       });
     }, 2000);
-    setTimeout(() => {
-      snakeMap.forEach((e) => {
-        e.forEach((j) => {
+    setTimeout(function(){
+      snakeMap.forEach(function(e){
+        e.forEach(function(j){
           j.classList.remove("food");
         });
       });
@@ -530,7 +714,7 @@ function App() {
     }, 2500);
   }
 
-  const snakeTick = () => { 
+  const snakeTick = function(){ 
 
     if ((player.head.y + player.direction.y) >= 0 && (player.head.y + player.direction.y) < snakeMap.length && (player.head.x + player.direction.x) >= 0 && (player.head.x + player.direction.x) < snakeMap[0].length){
       
@@ -542,8 +726,8 @@ function App() {
 
         spotAvailable = [];
 
-        snakeMap.forEach((row, yPos) => {
-          row.forEach((element, xPos) => {
+        snakeMap.forEach(function(row, yPos){
+          row.forEach(function(element, xPos){
             
             if (element.classList.contains("snake") || element.classList.contains("body") || element.classList.contains("food")){}
             else {
@@ -568,8 +752,8 @@ function App() {
         return;
       }
 
-      snakeMap.forEach((e) => {
-        e.forEach((j) => {
+      snakeMap.forEach(function(e){
+        e.forEach(function(j){
           j.classList.remove("snake");
           j.classList.remove("body");
           j.classList.remove('food');
@@ -578,13 +762,13 @@ function App() {
 
       snakeMap[player.head.y][player.head.x].classList.add("snake");
 
-      player.body.forEach((e) => {
+      player.body.forEach(function(e){
         snakeMap[e.y][e.x].classList.add("body");
       })
 
       snakeMap[food.y][food.x].classList.add("food");
 
-      setTimeout(() => {
+      setTimeout(function(){
         snakeTick();
       }, snakeTickInterval);
 
@@ -592,7 +776,7 @@ function App() {
 
   }
 
-  useEffect(() => {
+  useEffect(function(){
 
     if (playSnake){ // Enter the Snake Minigame
 
@@ -607,7 +791,7 @@ function App() {
       player.body = [];
       snakeMap[player.head.y][player.head.x].classList.add("snake");
 
-      setTimeout(() => {
+      setTimeout(function(){
         snakeTick();
       }, snakeTickInterval);
 
@@ -617,7 +801,7 @@ function App() {
 
 // PIANO NOTE PLAYING ----- PLAYING A SONG FUNCTION
 
-  useEffect(() => {
+  useEffect(function(){
 
     var pianoHolder = document.querySelector(".piano");
     var newNote = document.querySelector(".notes-holder");
@@ -625,7 +809,7 @@ function App() {
     var specialLines = [];
     //var pianoLines = document.querySelector(".piano-lines");
 
-    const resetPiano = () => {
+    const resetPiano = function(){
       changePlaying(1);
       changePlayingSpeed(1);
     }
@@ -640,7 +824,7 @@ function App() {
     pianoNotes.current.classList.remove("end");
     
     if (song === null) {playingSong = false; startTime = null;}
-    else {playingSong = true; setTimeout(() => {detailHolder.classList.remove("visible");}, 2000);}
+    else {playingSong = true; setTimeout(function(){detailHolder.classList.remove("visible");}, 2000);}
 
     // Executes only when there is a song available and exists.
 
@@ -650,7 +834,7 @@ function App() {
       var longestNote = song.notes[0];
       newNote.style.width = `${pianoHolder.getBoundingClientRect().width}px`;
 
-      song.notes.forEach((e, i) => {
+      song.notes.forEach(function(e, i){
 
         // Simple function to find out the note that we end on, based off length and duration.
         var keycode = e.note;
@@ -716,11 +900,11 @@ function App() {
 
       // The actual looping portion of the Playing Song function.
 
-      const startPlaying = () => {
+      const startPlaying = function(){
 
         if (playingSong !== false && currentTime < pianoNotes.current.clientHeight){
           
-          specialLines.forEach((e, i) => {
+          specialLines.forEach(function(e, i){
             
             var element = e.element;
             var bounds = element.getBoundingClientRect().bottom;
@@ -740,7 +924,7 @@ function App() {
           playingSong = false; setSong(null); pianoNotes.current.classList.remove("visible"); return;
         }
 
-        setTimeout(() => {
+        setTimeout(function(){
           requestAnimationFrame(startPlaying);
         }, 1000/tick);
         
@@ -751,15 +935,15 @@ function App() {
 
     }
 
-    window.addEventListener("resize", () => {newNote.style.height = `${pianoHolder.getBoundingClientRect().top}px`;});
-    return () => {window.removeEventListener("resize", () => {newNote.style.height = `${pianoHolder.getBoundingClientRect().top}px`;});}
+    window.addEventListener("resize", function(){newNote.style.height = `${pianoHolder.getBoundingClientRect().top}px`;});
+    return function(){window.removeEventListener("resize", function(){newNote.style.height = `${pianoHolder.getBoundingClientRect().top}px`;});}
 
   }, [song]);
 
 // --------------------------------------------------------------------
 
 /* -------------------------------------------------------------- */
-  useLayoutEffect(() => {animation();}, []); 
+  useLayoutEffect(function(){animation();}, []); 
 /* -------------------------------------------------------------- */
 
   return (
@@ -782,27 +966,45 @@ function App() {
         </div>
       </div>
       <div className="masthead">
-        <span className="logo" onClick={() => {setMode("menu");}}>Peach<span className="bold">Mix</span></span>
+        <span className="logo" onClick={function(){setMode("menu");}}>Peach<span className="bold">Mix</span></span>
+        <span className='text'>Not responsive yet - JC</span>
       </div>
-      <div className={`main-page${mode !== "menu" ? " hidden" : ""}`}>
+
+      <div className="page-holder">
+
+      <div className={`main-page${mode !== "menu" ? " hidden" : " visible"}`}>
 
         <span className="main-text">Choose from one of the following modes</span>
 
         <div className="mode-selection">
-          <div className="mode-button" onClick={() => {setMode("preset");}}>{preset}<span>Sound Presets</span></div>
-          <div className="mode-button" onClick={() => {setMode("piano");}}>{piano}<span>Piano Mode</span></div>
-          <div className="mode-button" onClick={() => {setMode("import");}}>{upload}<span>Import Audio</span></div>
+          <div className="mode-button" onClick={function(){setMode("preset");}}>{preset}<span>Sound Presets</span></div>
+          <div className="mode-button" onClick={function(){setMode("piano");}}>{piano}<span>Piano Mode</span></div>
+          <div className="mode-button" onClick={function(){setMode("import");}}>{upload}<span>Import Audio</span></div>
         </div>
 
       </div>
 
-      <div className={`page${mode === "preset" ? " visible" : ""}`}>
-        <div className={`launchpad${playSnake ? " minigame" : ""}`}>
-          <div className="launchpad-logo" onClick={() => {setPlaySnake(!playSnake);}}>{logo}</div>
+      <div className={`launchpad-page page${mode === "preset" ? " visible" : ""}`}>
+        <div ref={launchpadObject} className={`launchpad${playSnake ? " minigame" : ""}`} onTouchEnd={function(){
+
+          for (var [key, value] of allKeysMap) {
+            value.touched = false;
+            if (!value.presetKey) continue;
+            if (!value.pressed && !value.touched && !value.clicked)
+              value.presetKey.classList.remove("pressed");
+          }
+
+        }}>
+          <div className="launchpad-logo" onClick={function(){setPlaySnake(!playSnake);}}>{logo}</div>
         </div>
       </div>
 
-      <div className={`page${mode === "piano" ? " visible" : ""}`}>
+      <div className={`piano-page page${mode === "piano" ? " visible" : ""}`}>
+
+        <div className="page-message-piano">
+          {rotateIcon}
+          <span>Rotate your phone or enlarge screen to see this panel.</span>
+        </div>
 
         <div className={`notes-holder${playingState === 0 ? " paused" : ""}`}>
           <div ref={pianoNotes} className="piano-notes"></div>
@@ -810,16 +1012,24 @@ function App() {
 
         <div className="piano-holder">
 
-          <div className="piano">
-          </div>
+          <div ref={pianoObject} className="piano" onTouchEnd={function(){
+
+            for (var [key, value] of allKeysMap) {
+              value.touched = false;
+              if (!value.pianoKey) continue;
+              if (!value.pressed && !value.touched && !value.clicked)
+                value.pianoKey.classList.remove("pressed");
+            }
+
+            }}></div>
 
           <div className={`song-buttons${song !== null ? " visible" : ""}`}>
-            <div className="song-button" onClick={() => {playingState === 0 ? changePlaying(1) : changePlaying(0);}}>{playingState === 0 ? playingIcon : pauseIcon}</div>
-            <div className="song-button" onClick={() => {playingSong = false; setSong(null); pianoNotes.current.classList.remove("visible");}}>{endIcon}</div>
+            <div className="song-button" onClick={function(){playingState === 0 ? changePlaying(1) : changePlaying(0);}}>{playingState === 0 ? playingIcon : pauseIcon}</div>
+            <div className="song-button" onClick={function(){playingSong = false; setSong(null); pianoNotes.current.classList.remove("visible");}}>{endIcon}</div>
             {
-            //<div className="song-button" onClick={() => {if (pianoUnit === 128) pianoUnit = 176; else if (pianoUnit === 176) pianoUnit = 80; else pianoUnit = 128;}}>{sizeIcon}</div>
+            //<div className="song-button" onClick={function(){if (pianoUnit === 128) pianoUnit = 176; else if (pianoUnit === 176) pianoUnit = 80; else pianoUnit = 128;}}>{sizeIcon}</div>
             }
-            <div className="song-button playback" onClick={() => {if (playingSpeedState === 1) changePlayingSpeed(2); else if (playingSpeedState === 2) changePlayingSpeed(0.5); else changePlayingSpeed(1);}}>
+            <div className="song-button playback" onClick={function(){if (playingSpeedState === 1) changePlayingSpeed(2); else if (playingSpeedState === 2) changePlayingSpeed(0.5); else changePlayingSpeed(1);}}>
               {playingSpeedState === 2 && doubleSpeed}
               {playingSpeedState === 1 && normalSpeed}
               {playingSpeedState === 0.5 && halfSpeed}
@@ -828,13 +1038,13 @@ function App() {
 
           <div className={`song-search${song !== null ? " hidden" : ""}`}>
             <div className="searchbar-holder">
-              <input className="searchbar" placeholder="Search songs & artists" onFocus={() => {
+              <input className="searchbar" placeholder="Search songs & artists" onFocus={function(){
                 searchResults.classList.remove("hidden");
                 pianoContainer.classList.add("faded");
 
                 var text = searchBar.value.toUpperCase();
                 var results = [];
-                songs.forEach((song) => {
+                songs.forEach(function(song){
                   if (song.title === null && song.artist !== null){if (song.artist.toUpperCase().includes(text) || text.includes(song.artist.toUpperCase())) results.push(song);}
                   else if (song.title !== null && song.artist === null){if (song.title.toUpperCase().includes(text) || text.includes(song.title.toUpperCase())) results.push(song);}
                   else if (song.title !== null & song.artist !== null){if (song.title.toUpperCase().includes(text) || song.artist.toUpperCase().includes(text) || text.includes(song.title.toUpperCase()) || text.includes(song.artist.toUpperCase())) results.push(song);}
@@ -842,7 +1052,7 @@ function App() {
 
                 searchResults.innerHTML = "";
                 
-                results.forEach((result) => {
+                results.forEach(function(result){
                   var search = document.createElement("div");
                   var searchDetails = document.createElement("div");
                   var searchTitle = document.createElement("div");
@@ -861,15 +1071,15 @@ function App() {
                   search.appendChild(searchDetails);
                   searchResults.append(search);
 
-                  search.addEventListener("click", () => {
+                  search.addEventListener("click", function(){
                     setSong(result);
                   });
 
                 });
-              }} onBlur={() => {searchResults.classList.add("hidden"); pianoContainer.classList.remove("faded");}} onInput={() => {
+              }} onBlur={function(){searchResults.classList.add("hidden"); pianoContainer.classList.remove("faded");}} onInput={function(){
                 var text = searchBar.value.toUpperCase();
                 var results = [];
-                songs.forEach((song) => {
+                songs.forEach(function(song){
                   if (song.title === null && song.artist !== null){if (song.artist.toUpperCase().includes(text) || text.includes(song.artist.toUpperCase())) results.push(song);}
                   else if (song.title !== null && song.artist === null){if (song.title.toUpperCase().includes(text) || text.includes(song.title.toUpperCase())) results.push(song);}
                   else if (song.title !== null & song.artist !== null){if (song.title.toUpperCase().includes(text) || song.artist.toUpperCase().includes(text) || text.includes(song.title.toUpperCase()) || text.includes(song.artist.toUpperCase())) results.push(song);}
@@ -877,7 +1087,7 @@ function App() {
 
                 searchResults.innerHTML = "";
                 
-                results.forEach((result) => {
+                results.forEach(function(result) {
                   var search = document.createElement("div");
                   var searchDetails = document.createElement("div");
                   var searchTitle = document.createElement("div");
@@ -896,7 +1106,7 @@ function App() {
                   search.appendChild(searchDetails);
                   searchResults.append(search);
 
-                  search.addEventListener("click", () => {
+                  search.addEventListener("click", function(){
                     setSong(result);
                   });
 
@@ -918,11 +1128,15 @@ function App() {
 
       </div>
 
-      <div className={`page${mode === "import" ? " visible" : ""}`}>
+      <div className={`import-page page${mode === "import" ? " visible" : ""}`}>
 
+        <div className="page-message">
+          {rotateIcon}
+          <span>Rotate your phone or enlarge screen to see this panel.</span>
+        </div>
         <div className="key-tube">
           <div className="import-pad">
-            <div className="launchpad-logo" onClick={() => {
+            <div className="launchpad-logo" onClick={function(){
               for (var [key, value] of allKeysMap) {
                 if (!value.import) continue;
                 value.importAudio.pause();
@@ -931,22 +1145,31 @@ function App() {
             }}>{logo}</div>
           </div>
           <div className="audio-details">
-            <input multiple={false} className="ghst-input" type="file" accept="audio/mpeg, audio/wav, audio/ogg" onChange={(e) => {if (e.target.files[0] !== null) {var file = e.target.files[0]; handleFileChange(file); }}}></input>
+            <input multiple={false} className="ghst-input" type="file" accept="audio/mpeg, audio/wav, audio/ogg" onChange={function(e){if (e.target.files[0] !== null) {var file = e.target.files[0]; handleFileChange(file); }}}></input>
             
             {currentAudio !== "null" ? 
               <div className="audio-options">
 
-                <Knob element={allKeysMap.get(selectedImportState).importAudio} type={"volume"} min={0.0} max={1.0} default={1.0} label={"Volume"}/>
+                <span className="audio-title">{allKeysMap.get(selectedImportState).importAudioTitle}</span>
 
-                <Knob element={allKeysMap.get(selectedImportState).importAudio} type={"speed"} min={0.25} max={4.0} default={1.0} label={"Speed"}/>
+                <AudioWave current={selectedImportState} element={allKeysMap.get(selectedImportState).importAudio}/>
+
+                <div className="row">
+                  <Knob current={selectedImportState} element={allKeysMap.get(selectedImportState).importAudio} type={"volume"} min={0.0} max={1.0} default={allKeysMap.get(selectedImportState).importAudio.volume} label={"Volume"}/>
+
+                  <Knob current={selectedImportState} element={allKeysMap.get(selectedImportState).importAudio} type={"speed"} min={0.25} max={4.0} default={allKeysMap.get(selectedImportState).importAudio.playbackRate} label={"Speed"}/>
+
+                  <ModeElement current={selectedImportState} element={allKeysMap.get(selectedImportState)}/>
+                </div>
 
               </div> 
               :
-              <div className="drag-input" onClick={() => {var button = document.querySelector(".ghst-input"); button.click();}} 
-              onDragOver={(e) => {e.preventDefault();}}
-              onDragStart={(e) => {e.preventDefault();}}
-              onDrop={(e) => {e.preventDefault(); var file = e.dataTransfer.files[0]; handleFileChange(file); }}
-              onDragEnd={(e) => {e.preventDefault(); e.stopPropagation();}}>
+              <div className="drag-input" onClick={function(){var button = document.querySelector(".ghst-input"); button.click();}} 
+              onDragOver={function(e){e.preventDefault();}}
+              onDragStart={function(e){e.preventDefault();}}
+              onDrop={function(e){e.preventDefault(); var file = e.dataTransfer.files[0]; handleFileChange(file); }}
+              onDragEnd={function(e){e.preventDefault(); e.stopPropagation();}}>
+                {upload}
                 <div>Click or drag to input an audio clip.</div>
               </div>
             }
@@ -954,6 +1177,8 @@ function App() {
           </div>
 
         </div>
+
+      </div>
 
       </div>
 

@@ -38,8 +38,11 @@ textarea:focus, input:focus{
   --page-easing: ease-in-out;
   --page-opacity: 0.3s;
   --page-transition: 0.5s;
+  --page-padding: 106.4px 32px;
 
   --key-trail-size: 16px;
+
+  --launchpad-interval: 10px;
 
   --sharp-flat-note: #0e3a6e;
   --regular-note: #287ee4;
@@ -88,7 +91,10 @@ textarea:focus, input:focus{
   z-index: 4;
   height: 106.4px;
   pointer-events: none;
+  justify-content: space-between;
 }
+
+.masthead .text {opacity: 0.25; padding-left: 24px; text-align: right;}
 
 .logo {
   color: white;
@@ -144,33 +150,41 @@ textarea:focus, input:focus{
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 4em;
   width: 100%;
   min-height: 100vh;
   position: fixed;
   bottom: 0%;
   transition: opacity var(--page-opacity) var(--page-easing), bottom var(--page-transition) var(--page-easing);
+  padding: var(--page-padding);
+  box-sizing: border-box;
 }
+
+.main-page.visible {position: relative;}
 
 .main-page.hidden {bottom: 100%; opacity: 0;}
 
-.main-text {font-size: 1.5em; font-weight: 300; margin-top: -2em; text-align: center;}
+.main-text {font-size: 1.5em; font-weight: 300; text-align: center; margin-bottom: 2em;}
 
 .mode-selection {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 16em;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .mode-button {
   display: flex;
   flex-direction: column;
-  gap: 2.5em;
+  margin-right: 14em;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   transform: translateY(100%);
+}
+
+.mode-button:last-child {
+  margin-right: 0em;
 }
 
 .mode-button svg {
@@ -186,15 +200,8 @@ textarea:focus, input:focus{
   padding: 0.3em 0.9em;
   border-radius: 1em;
   transition: background-color .2s ease-out, color .2s ease-out;
-}
-
-.mode-button:hover svg{
-  fill: white;
-}
-
-.mode-button:hover span {
-  background-color: white;
-  color: #262626;
+  margin-top: 2em;
+  white-space: nowrap;
 }
 
 .page {
@@ -209,12 +216,15 @@ textarea:focus, input:focus{
   justify-content: center;
   align-items: center;
   pointer-events: none;
+  padding: var(--page-padding);
+  box-sizing: border-box;
 }
 
 .page.visible {
   top: 0%;
   opacity: 1;
   pointer-events: initial;
+  position: relative;
 }
 
 .key-tube {
@@ -244,10 +254,7 @@ textarea:focus, input:focus{
 .audio-details {
   width: 100%;
   height: 314px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  box-sizing: border-box;
 }
 
 /* ----------- PIANO ------------- */
@@ -378,14 +385,6 @@ textarea:focus, input:focus{
 .black-key.pressed span {
   bottom: 5%;
   opacity: 0.75;
-}
-
-.white-key:hover {
-  background-color: var(--white-key-hover);
-}
-
-.black-key:hover {
-  background-color: var(--black-key-hover);
 }
 
 .white-key.pressed {
@@ -588,21 +587,13 @@ textarea:focus, input:focus{
   opacity: 1;
 }
 
-.search:hover {
-  background-color: #ffffff0a;
-}
-
-.search:hover .search-details {
-  border-top-color: transparent;
-}
-
 .search-details {
   border-top: 1px solid #ffffff1f;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 80px;
+  min-height: 80px;
   transition: border-color .2s ease-in-out;
 }
 
@@ -685,11 +676,6 @@ textarea:focus, input:focus{
   fill: rgba(255, 255, 255, 0.2);
 }
 
-.song-button:hover {
-  background-color: rgb(26, 26, 26);
-  fill: white;
-}
-
 .song-button.playback {border-right: 0px;}
 
 .song-button.playback svg{
@@ -701,8 +687,55 @@ textarea:focus, input:focus{
 }
 
 /* Handle on hover */
-.search-results::-webkit-scrollbar-thumb:hover {
-  background: white;
+
+@media (hover: hover){
+
+  .launchpad .button:hover {
+    background-color: var(--launchpad-button-hover);
+  }
+
+  .import-pad .button:not(.loaded):hover {
+    background-color: var(--importpad-button-hover);
+  }
+
+  .import-pad .button.loaded:not(.pressed):hover {
+    background-color: var(--importpad-loaded-button-hover);
+  }
+
+  .mode-button:hover svg{
+    fill: white;
+  }
+
+  .mode-button:hover span {
+    background-color: white;
+    color: #262626;
+  }
+
+  .white-key:hover {
+    background-color: var(--white-key-hover);
+  }
+
+  .black-key:hover {
+    background-color: var(--black-key-hover);
+  }
+
+  .search:hover {
+    background-color: #ffffff0a;
+  }
+
+  .search:hover .search-details {
+    border-top-color: transparent;
+  }
+
+  .song-button:hover {
+    background-color: rgb(26, 26, 26);
+    fill: white;
+  }
+
+  .search-results::-webkit-scrollbar-thumb:hover {
+    background: white;
+  }
+
 }
 
 /* -------------------- PRESET -------------------------- */
@@ -714,7 +747,6 @@ textarea:focus, input:focus{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 10px;
   width: 434px;
   position: relative;
 }
@@ -763,7 +795,17 @@ textarea:focus, input:focus{
   box-shadow: -6px -6px 12px rgb(0 0 0 / 8%) inset, 3px 3px 12px rgb(255 255 255 / 10%) inset, 0px 0px 6px 1px rgb(0 0 0 / 55%);
   transition: background-color 0.05s ease-in, color 0.05s ease-in;
   box-sizing: border-box;
+  margin-right: 10px;
+  margin-bottom: 10px;
 }
+
+.import-pad .button:nth-child(5){margin-right: 0;}
+.import-pad .button:nth-child(9){margin-right: 0;}
+.import-pad .button:nth-child(13){margin-right: 0;}
+.import-pad .button:nth-child(14){margin-bottom: 0;}
+.import-pad .button:nth-child(15){margin-bottom: 0;}
+.import-pad .button:nth-child(16){margin-bottom: 0;}
+.import-pad .button:nth-child(17){margin-right: 0; margin-bottom: 0;}
 
 .launchpad .button {
   width: 64px;
@@ -782,6 +824,8 @@ textarea:focus, input:focus{
   user-select: none;
   cursor: pointer;
   padding: 10px 12px;
+  margin-bottom: var(--launchpad-interval);
+  margin-right: var(--launchpad-interval);
   box-sizing: border-box;
   overflow: hidden;
   position: relative;
@@ -789,19 +833,17 @@ textarea:focus, input:focus{
   transition: background-color 0.05s ease-in, color 0.05s ease-in;
 }
 
-
-.launchpad .button:hover {
-  background-color: var(--launchpad-button-hover);
-}
-
-.import-pad .button:not(.loaded):hover {
-  background-color: var(--importpad-button-hover);
-}
-
-.import-pad .button.loaded:not(.pressed):hover {
-  background-color: var(--importpad-loaded-button-hover);
-}
-
+.launchpad .button:nth-child(7) {margin-right: 0;}
+.launchpad .button:nth-child(13) {margin-right: 0;}
+.launchpad .button:nth-child(19) {margin-right: 0;}
+.launchpad .button:nth-child(25) {margin-right: 0;}
+.launchpad .button:nth-child(31) {margin-right: 0;}
+.launchpad .button:nth-child(32) {margin-bottom: 0;}
+.launchpad .button:nth-child(33) {margin-bottom: 0;}
+.launchpad .button:nth-child(34) {margin-bottom: 0;}
+.launchpad .button:nth-child(35) {margin-bottom: 0;}
+.launchpad .button:nth-child(36) {margin-bottom: 0;}
+.launchpad .button:nth-child(37) {margin-right: 0; margin-bottom: 0px;}
 
 .launchpad.minigame .button.snake{background-color: var(--green);}
 .launchpad.minigame .button.body{background-color: var(--dark-green);}
@@ -826,7 +868,6 @@ textarea:focus, input:focus{
   flex-direction: row;
   flex-wrap: wrap;
   width: 314px;
-  gap: 10px;
   padding: 14px;
   box-sizing: border-box;
   position: relative;
@@ -843,10 +884,16 @@ textarea:focus, input:focus{
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+
+.audio-details svg {
+  height: 64px;
+  fill: white;
+  margin-bottom: 1em;
 }
 
 .button.selected {border: 2px solid hsla(0, 0%, 100%, 0.6);}
@@ -862,8 +909,8 @@ textarea:focus, input:focus{
 }
 
 .option-knob {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   background-color: rgb(58 58 58);
   border-radius: 100%;
   position: relative;
@@ -885,7 +932,7 @@ textarea:focus, input:focus{
 }
 
 .option-label {
-  width: 64px;
+  width: 56px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -899,16 +946,230 @@ textarea:focus, input:focus{
   color: #787878;
   -webkit-user-select: none;
   user-select: none;
-  transition: color .1s ease-in-out, border-color .1s ease-in-out;
+  transition: color .1s ease-in-out, background-color .1s ease-in-out;
 }
 
 .audio-options {
   display: flex;
-  flex-direction: row;
-  gap: 2em;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .option-label.focused {
   color: #fff;
   border-color: #fff;
+}
+
+.mode-option-holder .button-holder {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #787878;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: color .1s ease-in-out, border-color .1s ease-in-out;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+  cursor: pointer;
+}
+
+.mode-option-holder .button {
+  width: 10px;
+  height: 10px;
+  background-color: gray;
+  border-radius: 100%;
+}
+
+.mode-option-holder {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5em;
+  border: 2px solid #787878;
+  border-radius: 8px;
+  height: 44px;
+  padding: 0px 1.25em;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-holder.active {
+  color: white;
+}
+
+.button-holder.active .button{
+  background-color: var(--blue);
+}
+
+.mode-holder .label {
+  background-color: #181818;
+  position: relative;
+  z-index: 1;
+  text-transform: uppercase;
+  font-size: 0.7em;
+  padding: 0em 1em;
+  transform: translateY(50%);
+  color: gray;
+  font-weight: 600;
+}
+
+.mode-holder {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.audio-options .row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 24px;
+  box-sizing: border-box;
+  flex-grow: 0;
+}
+
+.audio-options .audio-title {
+  padding: 12px 48px;
+  color: white;
+  font-weight: 600;
+  box-sizing: content-box;
+  margin-left: -24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 438px;
+  flex-shrink: 0;
+}
+
+.import-pad .button span {pointer-events: none;}
+
+.page-message svg {fill: white; height: 25vw; margin-bottom: 5vw;}
+.page-message {font-weight: 500; display: none; flex-direction: column;
+justify-content: center; align-items: center; text-align: center; font-size: 1.5em;
+}
+
+.page-message-piano svg {fill: white; height: 25vw; margin-bottom: 5vw;}
+.page-message-piano {font-weight: 500; display: none; flex-direction: column;
+justify-content: center; align-items: center; text-align: center; font-size: 1.5em;
+}
+
+/* ----------------- MEDIA QUERIES -------------- */
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .mode-button svg {height: 20vw;}
+  .mode-selection {flex-direction: row; justify-content: space-around;}
+  .mode-button {margin-right: 5vw; margin-bottom: 3em; margin-left: 5vw;}
+  .mode-button:last-child {margin-right: 5vw;}
+  .loader-holder {font-size: 15vw;}
+
+  .page-message {display: flex;}
+  .page-message-piano {display: flex;}
+  .notes-holder {display: none;}
+  .piano-holder {display: none;}
+
+  .launchpad {width: 82.509vw; padding: 2.66vw;}
+  .launchpad .button {width: 12.167vw; height: 12.167vw; padding: 1.901vw 2.281vw; font-size: 3.346vw;}
+  .launchpad .launchpad-logo {width: 8.365vw; height: 8.365vw;}
+
+  :root {--launchpad-interval: 1.901vw;}
+  .song-search {width: 88.632vw;}
+  
+  .key-tube {width: 92.8571428571vw; display: none;}
+  .import-pad {width: 35.0446428571vw; padding: 1.5625vw;}
+  .import-pad .launchpad-logo {width: 4.91071428571vw; height: 4.91071428571vw;}
+  .import-pad .button {width: 7.14285714286vw; height: 7.14285714286vw; font-size: 1.96428571429vw; padding: 1.11607142857vw 1.33928571429vw; margin-right: 1.11607142857vw; margin-bottom: 1.11607142857vw;}
+  .import-pad .button.selected {border-width: 0.22321428571vw;}
+  .audio-details {height: 35.0446428571vw; font-size: 1.78571428571vw;}
+  .audio-details svg {height: 7.14285714286vw; margin-bottom: 1.78571428571vw;}
+
+  .audio-options .audio-title {padding: 1.33928571429vw 5.35714285714vw; margin-left: -2.67857142857vw; width: 48.8839285714vw;}
+  .audio-options .row {padding: 2.67857142857vw;}
+  .option-knob {width: 4.46428571429vw; height: 4.46428571429vw;}
+  .option-knob:after {width: 0.334821429vw; height: 2.23214286vw;}
+  .option-label {width: 6.25vw; height: 2.23214285714vw; border-width: 0.22321428571vw; font-size: 1.25vw;}
+  .mode-holder .label {font-size: 1.25vw; padding: 0em 1.78571428571vw;}
+  .mode-option-holder {border-width: 0.22321428571vw; height: 4.91071428571vw; padding: 0em 2.23214285714vw;}
+  
+
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) and (max-width: 767px) {
+  .mode-button svg {height: 6em;}
+  .mode-button {margin-right: 13vw;}
+
+  .page-message {display: flex;}
+
+  .key-tube {width: 92.8571428571vw; display: none;}
+  .import-pad {width: 35.0446428571vw; padding: 1.5625vw;}
+  .import-pad .launchpad-logo {width: 4.91071428571vw; height: 4.91071428571vw;}
+  .import-pad .button {width: 7.14285714286vw; height: 7.14285714286vw; font-size: 1.96428571429vw; padding: 1.11607142857vw 1.33928571429vw; margin-right: 1.11607142857vw; margin-bottom: 1.11607142857vw;}
+  .import-pad .button.selected {border-width: 0.22321428571vw;}
+  .audio-details {height: 35.0446428571vw; font-size: 1.78571428571vw;}
+  .audio-details svg {height: 7.14285714286vw; margin-bottom: 1.78571428571vw;}
+
+  .audio-options .audio-title {padding: 1.33928571429vw 5.35714285714vw; margin-left: -2.67857142857vw; width: 48.8839285714vw;}
+  .audio-options .row {padding: 2.67857142857vw;}
+  .option-knob {width: 4.46428571429vw; height: 4.46428571429vw;}
+  .option-knob:after {width: 0.334821429vw; height: 2.23214286vw;}
+  .option-label {width: 6.25vw; height: 2.23214285714vw; border-width: 0.22321428571vw; font-size: 1.25vw;}
+  .mode-holder .label {font-size: 1.25vw; padding: 0em 1.78571428571vw;}
+  .mode-option-holder {border-width: 0.22321428571vw; height: 4.91071428571vw; padding: 0em 2.23214285714vw;}
+
+  .notes-holder {display: none;}
+  .piano {transform: scale(.6);}
+  
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) and (max-width: 895px) {
+  .mode-button {margin-right: 15vw;}
+  .piano {transform: scale(.7);}
+
+
+  .key-tube {width: 92.8571428571vw;}
+  .import-pad {width: 35.0446428571vw; padding: 1.5625vw;}
+  .import-pad .launchpad-logo {width: 4.91071428571vw; height: 4.91071428571vw;}
+  .import-pad .button {width: 7.14285714286vw; height: 7.14285714286vw; font-size: 1.96428571429vw; padding: 1.11607142857vw 1.33928571429vw; margin-right: 1.11607142857vw; margin-bottom: 1.11607142857vw;}
+  .import-pad .button.selected {border-width: 0.22321428571vw;}
+  .audio-details {height: 35.0446428571vw; font-size: 1.78571428571vw;}
+
+  .audio-options .audio-title {padding: 1.33928571429vw 5.35714285714vw; margin-left: -2.67857142857vw; width: 48.8839285714vw;}
+  .audio-options .row {padding: 2.67857142857vw;}
+  .option-knob {width: 4.46428571429vw; height: 4.46428571429vw;}
+  .option-knob:after {width: 0.334821429vw; height: 2.23214286vw;}
+  .option-label {width: 6.25vw; height: 2.23214285714vw; border-width: 0.22321428571vw; font-size: 1.25vw;}
+  .mode-holder .label {font-size: 1.25vw; padding: 0em 1.78571428571vw;}
+  .mode-option-holder {border-width: 0.22321428571vw; height: 4.91071428571vw; padding: 0em 2.23214285714vw;}
+
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 896px) and (max-width: 919px) {
+  .mode-button {margin-right: 15vw;}
+  .piano {transform: scale(.7);}
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 920px) and (max-width: 991px) {
+  .piano {transform: scale(.8);}
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) and (max-width: 1113px) {
+  .piano {transform: scale(.88);}
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 1114px) and (max-width: 1199px) {
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  
 }
