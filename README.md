@@ -5,7 +5,7 @@
 - **Piano Mode** – Simulates piano keys for playing melodies  
 - **Import Mode** – Upload and modify your own audio files
 
-Originally built in 2020 and fully reimagined in 2023, PeachMix now features optimized audio rendering, a curated collection of playable pop songs, and hidden easter eggs—just look out for the little 🍑 icon.
+Originally built in 2020 and fully reimagined in 2023, PeachMix now features optimized audio rendering, a curated collection of playable pop songs, and hidden easter eggs - just look out for the little peach icon.
 
 👉 [Live Demo](https://sage-mandazi-75f7eb.netlify.app/)
 
