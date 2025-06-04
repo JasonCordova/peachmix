@@ -12,7 +12,6 @@ Originally built in 2020 and fully reimagined in 2023, PeachMix now features opt
 
 👉 [Live Demo](https://sage-mandazi-75f7eb.netlify.app/)
 
----
 
 ## ✨ Features
 
