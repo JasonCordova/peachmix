@@ -21,11 +21,4 @@ Originally built in 2020 and fully reimagined in 2023, PeachMix now features opt
 - 📁 Custom audio file import and editing  
 - 🚀 Optimized audio handling for smooth playback and performance  
 - 🍑 Fun easter eggs hidden throughout the app
-
----
-
-## 🛠 Tech Stack
-
-- **Frontend**: React, HTML5, CSS3  
-- **Audio**: Web Audio API  
-- **Hosting**: Netlify
+- Made using React, Web Audio API, and hosted on Netlify
