@@ -43,4 +43,11 @@ keys light up. The icon is light gray when off and matches the blue piano notes 
 stop, and the 0.5×/1×/2× speed control work for both the guide and autoplay. Autoplay
 starts off for each new song so you can still practice manually.
 
+During a song, the bottom-right indicator shows your S/A/B/C/D/F rating,
+accuracy, and current and best Perfect-note streaks. Perfect hits are within
+80 ms; Good hits are within 180 ms and earn half credit. Missed or wrong notes
+break the streak and lower accuracy. Timing windows follow playback speed,
+pausing freezes scoring, and Autoplay notes are excluded. Hover over the
+indicator for grade thresholds.
+
 Run locally with `npm install` and `npm start`. Use `npm run build` for a production build.

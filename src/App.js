@@ -5,6 +5,8 @@ import AudioWave from './AudioWave.js';
 import animation from './animation.js';
 import songs from './songs.js';
 import PianoAudio from './PianoAudio';
+import PianoPerformance from './PianoPerformance';
+import PerformanceIndicator from './PerformanceIndicator';
 import { pianoKeys, createPianoScore } from './pianoScore';
 
 const logo = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M10 2C15.27.5 23.33.12 27.89 3.65c1.86 1.44 4.29 4.39 3.43 6.93-.89 2.62-5.01 3.15-7.32 2.8C17.64 12.43 12.89 7.37 10 2Zm25 10c6.05 0 10.91-.74 15.96 3.39C63.5 25.64 60.44 48.11 46 55c4.12-12.59 4.98-26.19-4.33-36.96L35 12Zm-19 2.11c4.85-.16 5.23 1.28 9 1.41 5.15.17 8.97-4.14 15.47 3.57C49.53 29.84 50.92 60 33 62.79 17.71 65.17-1.18 44.85 7.26 24c1.97-4.87 3.89-7.71 8.74-9.89Z"/></svg>;
@@ -217,12 +219,14 @@ function App() {
   const [playingSpeedState, setPlayingSpeedState] = useState(1);
   const [autoplay, setAutoplay] = useState(false);
   const [pianoStatus, setPianoStatus] = useState('idle');
+  const [performance, setPerformance] = useState(null);
   const [selectedImportState, setSelectedImportState] = useState(null); 
   const [currentAudio, setCurrentAudio] = useState("null");
   const pianoNotes = useRef();
   const pianoObject = useRef();
   const launchpadObject = useRef();
   const pianoAudio = useRef(null);
+  const performanceTracker = useRef(null);
   const playbackRequest = useRef(0);
   const setMode = function(temp){
     playbackRequest.current++;
@@ -260,7 +264,10 @@ function App() {
   };
 
   useEffect(() => {
-    const audio = new PianoAudio(setPianoStatus);
+    const audio = new PianoAudio(setPianoStatus, (key, position, speed) => {
+      const tracker = performanceTracker.current;
+      if (tracker?.press(key, position, speed)) setPerformance(tracker.snapshot());
+    });
     const requests = playbackRequest;
     pianoAudio.current = audio;
     return () => { requests.current++; audio.dispose(); };
@@ -876,6 +883,9 @@ function App() {
     const requests = playbackRequest;
     const request = ++requests.current;
     const score = song ? createPianoScore(song) : null;
+    const tracker = score ? new PianoPerformance(score.notes) : null;
+    performanceTracker.current = tracker;
+    setPerformance(tracker ? tracker.snapshot() : null);
     audio.setScore(score);
     setAutoplay(false);
     setPlayingState(1);
@@ -920,6 +930,7 @@ function App() {
     let frame;
     const paint = () => {
       const position = audio.getPosition();
+      if (audio.running && tracker.advance(position, audio.speed)) setPerformance(tracker.snapshot());
       container.style.transform = `translateY(${score.secondsToBeat(position) * pianoUnit}px)`;
       const active = new Set(audio.autoplay && audio.running
         ? score.notes.filter((note) => note.start <= position && note.end > position).map((note) => note.note)
@@ -943,6 +954,7 @@ function App() {
       clearTimeout(detailTimeout);
       window.removeEventListener('resize', resize);
       audio.pause();
+      if (performanceTracker.current === tracker) performanceTracker.current = null;
       for (const value of allKeysMap.values()) value.pianoKey?.classList.remove('autoplay-pressed');
     };
   }, [song]);
@@ -955,6 +967,7 @@ function App() {
   return (
     
     <>
+      <PerformanceIndicator performance={performance} visible={mode === 'piano' && song !== null && performance !== null} />
       <div className="loader">
         <div className="loader-holder">
 
@@ -1040,6 +1053,12 @@ function App() {
               aria-pressed={autoplay} disabled={pianoStatus !== 'ready'}
               onClick={() => {
                 const enabled = !autoplay;
+                const audio = pianoAudio.current;
+                const tracker = performanceTracker.current;
+                if (tracker) {
+                  tracker.setAutoplay(enabled, audio.getPosition(), audio.speed, audio.running);
+                  setPerformance(tracker.snapshot());
+                }
                 setAutoplay(enabled);
                 pianoAudio.current.setAutoplay(enabled);
               }}>{autoplayIcon}</button>

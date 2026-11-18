@@ -17,8 +17,9 @@ const midiToNote = (midi) => {
 };
 
 export default class PianoAudio {
-  constructor(onStatus = () => {}) {
+  constructor(onStatus = () => {}, onManualNote = () => {}) {
     this.onStatus = onStatus;
+    this.onManualNote = onManualNote;
     this.held = new Set();
     this.speed = 1;
     this.autoplay = false;
@@ -96,6 +97,7 @@ export default class PianoAudio {
     const attack = () => {
       if (!this.disposed && this.presses.get(key) === press && this.held.has(key)) {
         this.keyboard.triggerAttack(midiToNote(midi), this.context.immediate(), 0.8);
+        if (this.running && !this.autoplay) this.onManualNote(key, this.getPosition(), this.speed);
       }
     };
     if (this.keyboard && this.context.state === 'running') attack();

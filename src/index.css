@@ -259,6 +259,74 @@ textarea:focus, input:focus{
 
 /* ----------- PIANO ------------- */
 
+.piano-performance {
+  --rating-color: #8c96a3;
+  position: fixed;
+  right: 28px;
+  bottom: 24px;
+  width: 84px;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  color: var(--rating-color);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease-in-out, visibility 0s linear 0.15s;
+}
+.piano-performance.visible {opacity: 1; visibility: visible; pointer-events: auto; transition-delay: 0s;}
+.piano-performance[data-grade="S"] {--rating-color: #e7ba54;}
+.piano-performance[data-grade="A"] {--rating-color: #71c997;}
+.piano-performance[data-grade="B"] {--rating-color: var(--regular-note);}
+.piano-performance[data-grade="C"] {--rating-color: #e8d35f;}
+.piano-performance[data-grade="D"] {--rating-color: #e4944b;}
+.piano-performance[data-grade="F"] {--rating-color: #dc7272;}
+.performance-grade {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  flex: 0 0 84px;
+  color: #e7edf5;
+  font-size: 44px;
+  font-weight: 500;
+  line-height: 1;
+}
+.performance-ring {position: absolute; inset: 0; width: 100%; height: 100%; fill: none; color: var(--rating-color);}
+.performance-ring-track {stroke: currentColor; stroke-width: 3; opacity: 0.16;}
+.performance-ring-arc {stroke: url(#performance-ring-stroke); stroke-width: 7; stroke-linecap: round; stroke-dasharray: 100; transition: stroke-dashoffset 0.25s ease, opacity 0.15s ease-in-out;}
+.performance-ring-inner {stroke: currentColor; stroke-width: 0.75; opacity: 0.12;}
+.performance-grade-letter {fill: color-mix(in srgb, var(--rating-color) 85%, white); font-size: 48px; font-weight: 500;}
+.performance-accuracy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  width: 68px;
+  min-width: 68px;
+  height: 28px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  margin-top: -14px;
+  transform: translateY(-4px);
+  padding: 5px 8px;
+  border: 1px solid #ffffff14;
+  border-radius: 7px;
+  background: #191b1f;
+  box-shadow: 0 2px 6px #0003, inset 0 1px 0 #ffffff04;
+  line-height: 1;
+  white-space: nowrap;
+}
+.performance-accuracy strong {font-size: 14px; font-weight: 500; letter-spacing: -0.03em; color: color-mix(in srgb, var(--rating-color) 75%, white);}
+.performance-accuracy span {font-size: 9px; font-weight: 400; color: #8a939f;}
+
 .piano-holder {
   display: flex;
   flex-direction: row;
