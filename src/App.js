@@ -4,6 +4,8 @@ import ModeElement from './ModeElement.js';
 import AudioWave from './AudioWave.js';
 import animation from './animation.js';
 import songs from './songs.js';
+import PianoAudio from './PianoAudio';
+import { pianoKeys, createPianoScore } from './pianoScore';
 
 const logo = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M10 2C15.27.5 23.33.12 27.89 3.65c1.86 1.44 4.29 4.39 3.43 6.93-.89 2.62-5.01 3.15-7.32 2.8C17.64 12.43 12.89 7.37 10 2Zm25 10c6.05 0 10.91-.74 15.96 3.39C63.5 25.64 60.44 48.11 46 55c4.12-12.59 4.98-26.19-4.33-36.96L35 12Zm-19 2.11c4.85-.16 5.23 1.28 9 1.41 5.15.17 8.97-4.14 15.47 3.57C49.53 29.84 50.92 60 33 62.79 17.71 65.17-1.18 44.85 7.26 24c1.97-4.87 3.89-7.71 8.74-9.89Z"/></svg>;
 
@@ -17,6 +19,66 @@ const rotateIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
 const playingIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 199 225"><path d="M8.04 1.74C18.72-.89 26.18 5.45 35 10.58l51 29.57 54 31.28 44 25.77c5.69 3.42 13.28 7.36 13.88 14.8.54 6.73-3.79 9.82-8.88 13.14l-31 18.06-82 47.22-56 31.79C5.89 228.63 1.02 221.64 1 208V15C1.09 8.68 2.31 4.99 8.04 1.74Z"/></svg>;
 
 
+const autoplayIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 554 554" aria-hidden="true" focusable="false"><path d="M 554.00,208.00
+  C 554.00,208.00 420.00,208.00 420.00,208.00
+    403.35,207.97 390.27,202.41 383.83,186.00
+    382.29,182.10 380.87,175.17 381.18,171.00
+    382.40,154.95 391.41,148.59 402.00,138.00
+    404.64,135.36 414.86,126.55 414.38,123.04
+    414.03,120.50 408.99,116.99 407.00,115.40
+    399.92,109.73 392.74,104.55 385.00,99.81
+    359.61,84.26 327.74,73.01 298.00,70.04
+    298.00,70.04 289.00,70.04 289.00,70.04
+    289.00,70.04 279.00,69.00 279.00,69.00
+    279.00,69.00 274.00,69.00 274.00,69.00
+    274.00,69.00 264.00,69.91 264.00,69.91
+    238.45,71.70 213.14,77.49 190.00,88.74
+    161.89,102.41 142.28,116.62 121.17,140.00
+    72.31,194.10 56.50,274.25 80.08,343.00
+    91.67,376.82 108.83,401.86 134.00,427.00
+    152.94,445.91 176.22,460.12 201.00,470.00
+    221.75,478.28 241.78,482.54 264.00,484.09
+    264.00,484.09 277.00,485.00 277.00,485.00
+    277.00,485.00 287.00,483.96 287.00,483.96
+    287.00,483.96 296.00,483.96 296.00,483.96
+    348.54,478.82 391.15,456.28 428.00,419.00
+    437.62,409.26 448.37,394.82 455.40,383.00
+    466.46,364.41 470.61,346.41 497.00,347.01
+    517.43,347.49 530.23,363.30 530.00,383.00
+    529.88,393.04 523.91,403.41 519.00,412.00
+    509.54,428.56 498.91,444.69 486.14,458.91
+    428.62,522.97 354.74,555.00 269.00,554.00
+    269.00,554.00 259.00,553.09 259.00,553.09
+    226.24,550.84 197.22,544.33 167.00,531.28
+    135.19,517.55 106.53,498.52 82.00,474.00
+    55.26,447.26 34.73,417.08 20.45,382.00
+    -15.07,294.73 -3.75,194.17 50.44,117.00
+    79.90,75.04 114.64,48.37 160.00,25.75
+    197.47,7.06 244.44,-0.48 286.00,0.00
+    286.00,0.00 296.00,0.91 296.00,0.91
+    340.50,3.97 379.35,15.99 418.00,38.42
+    428.83,44.71 439.13,51.88 449.00,59.58
+    449.00,59.58 464.00,71.54 464.00,71.54
+    468.84,73.50 477.66,62.34 481.00,59.00
+    493.72,46.28 503.02,33.03 523.00,35.17
+    543.07,37.33 553.97,52.70 554.00,72.00
+    554.00,72.00 554.00,208.00 554.00,208.00 Z
+  M 220.00,172.56
+  C 231.45,170.56 236.78,175.83 246.00,181.58
+    246.00,181.58 287.00,207.58 287.00,207.58
+    287.00,207.58 356.00,251.34 356.00,251.34
+    363.77,256.39 377.36,262.81 380.20,272.00
+    384.57,286.15 371.90,292.66 362.00,298.81
+    362.00,298.81 349.00,307.05 349.00,307.05
+    349.00,307.05 241.00,375.58 241.00,375.58
+    238.09,377.39 233.19,380.45 230.00,381.36
+    221.43,383.82 212.04,379.49 208.97,371.00
+    207.85,367.92 208.01,365.20 208.00,362.00
+    208.00,362.00 208.00,219.00 208.00,219.00
+    208.00,219.00 208.00,195.00 208.00,195.00
+    208.00,190.88 207.62,185.81 209.23,182.00
+    211.38,176.88 214.93,174.33 220.00,172.56 Z"/></svg>;
+
 const halfSpeed = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 10"><path d="M3.359 9.401c2.235 0 3.372-1.75 3.372-4.573v-.255C6.731 1.773 5.581 0 3.359 0 1.175 0 0 1.775 0 4.573v.255c0 2.823 1.175 4.573 3.359 4.573Zm0-1.226c-1.252 0-1.839-1.06-1.839-3.283v-.383c0-2.21.588-3.283 1.839-3.283 1.29 0 1.852 1.073 1.852 3.283v.383c0 2.222-.562 3.283-1.852 3.283Zm5.71 1.06V7.702h-1.52v1.533Zm4.483.166a3.047 3.047 0 0 0 3.3-3.053v-.141a2.8 2.8 0 0 0-2.942-2.885 2.747 2.747 0 0 0-1.827.65l.422-2.567h3.934V.166h-5.02l-.8 5.1 1.252.089a2.057 2.057 0 0 1 1.706-.885 1.683 1.683 0 0 1 1.814 1.763v.179a1.7 1.7 0 0 1-1.814 1.763 1.676 1.676 0 0 1-1.813-1.533h-1.482a2.98 2.98 0 0 0 3.27 2.759Zm5.569-.166 1.608-2.402 1.648 2.4h1.622l-2.4-3.411 2.261-3.168h-1.531l-1.507 2.2-1.493-2.197h-1.626l2.261 3.206-2.376 3.372Z"/></svg>;
 const normalSpeed = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 11"><path d="M3.731 10.497V.189H2.497a3.909 3.909 0 0 1-2.5 1.7v1.51a4.641 4.641 0 0 0 2.076-.958v8.056Zm3.673 0V8.755H5.677v1.742Zm4.763.189c2.541 0 3.833-1.989 3.833-5.2v-.29c0-3.18-1.307-5.2-3.833-5.2-2.483 0-3.819 2.018-3.819 5.2v.29c0 3.211 1.334 5.2 3.819 5.2Zm0-1.394c-1.423 0-2.091-1.205-2.091-3.731v-.439c0-2.512.668-3.731 2.091-3.731 1.466.003 2.105 1.222 2.105 3.731v.436c0 2.529-.639 3.734-2.105 3.734Zm6.287 1.205 1.828-2.729 1.874 2.729H24l-2.73-3.875 2.57-3.6h-1.742l-1.716 2.5-1.7-2.5h-1.84l2.57 3.642-2.701 3.833Z"/></svg>;
 const doubleSpeed = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 10"><path d="M6.274 9.334V8.082H1.562c.013-1.033.3-1.536 2.053-2.3 2.117-.9 2.595-1.859 2.595-3.1v-.077A2.721 2.721 0 0 0 3.228-.003a2.92 2.92 0 0 0-3.15 2.879h1.5a1.552 1.552 0 0 1 1.675-1.654 1.369 1.369 0 0 1 1.472 1.42v.039c0 .942-.31 1.381-1.846 2.014C.401 5.706.001 6.791.001 8.301v1.033Zm2.969 0V7.785H7.707v1.549Zm4.235.168c2.259 0 3.408-1.769 3.408-4.622v-.258C16.886 1.795 15.724 0 13.478 0c-2.208 0-3.4 1.795-3.4 4.622v.258c.005 2.853 1.193 4.622 3.4 4.622Zm0-1.239c-1.265 0-1.859-1.072-1.859-3.318v-.387c0-2.233.594-3.318 1.859-3.318 1.3 0 1.872 1.084 1.872 3.318v.387c0 2.246-.568 3.318-1.872 3.318Zm5.59 1.071 1.627-2.427 1.665 2.427h1.641l-2.428-3.447 2.285-3.2h-1.549l-1.524 2.219-1.51-2.221h-1.64l2.285 3.237-2.401 3.412Z"/></svg>
@@ -25,22 +87,7 @@ var pianoUnit = 128;    // Piano Height (px) per 1 second
 var sharpWidth = 30;    // Sharp piano width (px)
 var normalWidth = 50;   // Normal piano width (px)
 
-var pianoVolume = 0.65;
-
-var firstTempo = null;
-var firstTimeSignature = null;
-
-var playingSpeed = 1;   // Playback piano song speed (Integer)
-var playing = 1; // 1 for playing || 0 for not.
-
 var selectedImport = null;
-
-var tempo = 60;
-var timeSignature = 4/4;
-var currentTime = 0;
-var startTime = null; // Starting clock for determining Piano Song note position
-var tick = 150;
-var playingSong = false;
 
 const allSharps = [];
 
@@ -112,8 +159,6 @@ allKeysMap.set(191, {character: '/', import: false, preset: false, pressed: fals
 allKeysMap.set(222, {character: '\'', import: false, preset: false, pressed: false, clicked: false, touched: false, color: "orange"});
 allKeysMap.set(16, {character: '⇧', import: false, preset: false, pressed: false, clicked: false, touched: false, color: "orange"});
 
-const pianoKeys = [81, 50, 87, 51, 69, 82, 53, 84, 54, 89, 55, 85, 73, 57, 79, 48, 80, 90, 83, 88, 68, 67, 70, 86, 66, 72, 78, 74, 77, 188, 76, 190, 186, 191, 222, 16];
-
 const getPresetFromTouch = function(temp){
 
   var x = temp.clientX;
@@ -133,8 +178,10 @@ const getPianoFromTouch = function(temp){
 
   var x = temp.clientX;
   var y = temp.clientY;
-  for (var [key, value] of allKeysMap) {
-    if (!value.pianoKey) continue;
+  // Test the raised black keys first where their bounds overlap white keys.
+  const keys = [...allKeysMap].filter(([, value]) => value.pianoKey)
+    .sort((a, b) => Number(b[1].pianoKey.classList.contains('black-key')) - Number(a[1].pianoKey.classList.contains('black-key')));
+  for (var [key, value] of keys) {
     var bounds = value.pianoKey.getBoundingClientRect();
     if (x >= bounds.left && x <= bounds.right && y >= bounds.top && y <= bounds.bottom){
       return key;
@@ -144,26 +191,21 @@ const getPianoFromTouch = function(temp){
 
 };
 
-const resetPianoTouches = function(temp){
-
+const syncPianoTouches = function(touches){
+  const active = new Set(Array.from(touches, getPianoFromTouch));
   for (var [key, value] of allKeysMap) {
-
-    if (temp === key) continue;
-    allKeysMap.get(key).touched = false;
     if (!value.pianoKey) continue;
-
-    if (!allKeysMap.get(key).pressed && !allKeysMap.get(key).touched && !allKeysMap.get(key).clicked)
-          allKeysMap.get(key).pianoKey.classList.remove("pressed");
+    const wasTouched = value.touched;
+    value.touched = active.has(key);
+    if (value.touched && !wasTouched) value.playPiano();
+    value.releasePiano();
+    if (value.pressed || value.touched || value.clicked) value.pianoKey.classList.add('pressed');
+    else {
+      value.pianoKey.classList.remove("pressed");
+    }
     
   }
 
-}
-
-const getTimeDifference = function(){
-
-  var temp = startTime;
-  startTime = new Date();
-  return (Math.abs(temp - new Date()) / 1000);
 }
 
 function App() {
@@ -171,16 +213,58 @@ function App() {
   const [mode, changeMode] = useState(tempMode);
   const [song, setSong] = useState(null);
   const [playSnake, setPlaySnake] = useState(false);
-  const [playingState, setPlayingState] = useState(playing); 
-  const [playingSpeedState, setPlayingSpeedState] = useState(playingSpeed);
+  const [playingState, setPlayingState] = useState(1);
+  const [playingSpeedState, setPlayingSpeedState] = useState(1);
+  const [autoplay, setAutoplay] = useState(false);
+  const [pianoStatus, setPianoStatus] = useState('idle');
   const [selectedImportState, setSelectedImportState] = useState(null); 
   const [currentAudio, setCurrentAudio] = useState("null");
   const pianoNotes = useRef();
   const pianoObject = useRef();
   const launchpadObject = useRef();
-  const setMode = function(temp){setSong(null); changeMode(temp); tempMode = temp;}
-  const changePlayingSpeed = function(temp){setPlayingSpeedState(temp); playingSpeed = temp;};
-  const changePlaying = function(temp){setPlayingState(temp); playing = temp;}
+  const pianoAudio = useRef(null);
+  const playbackRequest = useRef(0);
+  const setMode = function(temp){
+    playbackRequest.current++;
+    pianoAudio.current.setScore(null);
+    pianoAudio.current.silenceKeyboard();
+    for (const value of allKeysMap.values()) {
+      value.pressed = value.clicked = value.touched = false;
+      value.pianoKey?.classList.remove('pressed', 'autoplay-pressed');
+    }
+    setSong(null); changeMode(temp); tempMode = temp;
+    if (temp === 'piano') pianoAudio.current.start().catch(() => {});
+  };
+  const changePlayingSpeed = function(speed){
+    setPlayingSpeedState(speed);
+    pianoAudio.current.setSpeed(speed);
+  };
+  const changePlaying = function(playing){
+    const request = ++playbackRequest.current;
+    setPlayingState(playing);
+    if (!playing) pianoAudio.current.pause();
+    else pianoAudio.current.start().then(() => {
+      if (request === playbackRequest.current) pianoAudio.current.play();
+    }).catch(() => {
+      if (request === playbackRequest.current) setPlayingState(0);
+    });
+  };
+  const selectSong = function(selectedSong){
+    pianoAudio.current.start().catch(() => {});
+    setSong(selectedSong);
+  };
+  const stopSong = function(){
+    playbackRequest.current++;
+    pianoAudio.current.setScore(null);
+    setSong(null);
+  };
+
+  useEffect(() => {
+    const audio = new PianoAudio(setPianoStatus);
+    const requests = playbackRequest;
+    pianoAudio.current = audio;
+    return () => { requests.current++; audio.dispose(); };
+  }, []);
   const changeSelected = function(temp){
     if (typeof allKeysMap.get(selectedImport) !== "undefined") allKeysMap.get(selectedImport).importKey.classList.remove("selected"); 
     selectedImport = temp; setSelectedImportState(temp); 
@@ -312,22 +396,21 @@ function App() {
       pianoHolder.appendChild(newKey);
       allKeysMap.get(e).pianoKey = newKey;
 
-      var audioFile = require("./PianoNotesMP3/note" + (i+1) + ".mp3");
-
-      var pianoAudio = new Audio(audioFile);
-      pianoAudio.preload = "auto";
-      pianoAudio.volume = pianoVolume;
-      allKeysMap.get(e).pianoAudio = pianoAudio;
+      const value = allKeysMap.get(e);
+      value.playPiano = () => pianoAudio.current.press(e);
+      value.releasePiano = () => {
+        if (!value.pressed && !value.touched && !value.clicked) pianoAudio.current.release(e);
+      };
 
       newKey.addEventListener("mousedown", function(){
         allKeysMap.get(e).clicked = true;
         newKey.classList.add("pressed");
-        pianoAudio.currentTime = 0;
-        pianoAudio.play();
+        value.playPiano();
       });
 
       newKey.addEventListener("mouseup", function(){
         allKeysMap.get(e).clicked = false;
+        value.releasePiano();
         if (!allKeysMap.get(e).pressed && !allKeysMap.get(e).touched && !allKeysMap.get(e).clicked)
           newKey.classList.remove("pressed");
       });
@@ -336,28 +419,13 @@ function App() {
         if (mouseDown === true){
           allKeysMap.get(e).clicked = true;
           newKey.classList.add("pressed");
-          pianoAudio.currentTime = 0;
-          pianoAudio.play();
+          value.playPiano();
         }
       });
 
       newKey.addEventListener("mouseout", function(){
         allKeysMap.get(e).clicked = false;
-        if (!allKeysMap.get(e).pressed && !allKeysMap.get(e).touched && !allKeysMap.get(e).clicked)
-          newKey.classList.remove("pressed");
-      });
-
-      /* ----------- IOS ------------- */
-
-      newKey.addEventListener("touchstart", function(){
-        allKeysMap.get(e).touched = true;
-        newKey.classList.add("pressed");
-        pianoAudio.currentTime = 0;
-        pianoAudio.play();
-      });
-
-      newKey.addEventListener("touchend", function(){
-        allKeysMap.get(e).touched = false;
+        value.releasePiano();
         if (!allKeysMap.get(e).pressed && !allKeysMap.get(e).touched && !allKeysMap.get(e).clicked)
           newKey.classList.remove("pressed");
       });
@@ -452,6 +520,8 @@ function App() {
   useEffect(function(){
 
     init();
+    const inputController = new AbortController();
+    const listen = (target, event, handler) => target.addEventListener(event, handler, {signal: inputController.signal});
 
     launchpadObject.current.addEventListener("touchstart", function(e){e.preventDefault();}, {passive: false});
     launchpadObject.current.addEventListener("touchmove", function(e){
@@ -476,32 +546,19 @@ function App() {
 
     }, {passive: false});
 
-    pianoObject.current.addEventListener("touchstart", function(e){e.preventDefault();}, {passive: false});
+    pianoObject.current.addEventListener("touchstart", function(e){
+      e.preventDefault();
+      syncPianoTouches(e.touches);
+    }, {passive: false});
     pianoObject.current.addEventListener("touchmove", function(e){
 
       e.preventDefault();
-      var keyFromElement = getPianoFromTouch(e.changedTouches[0]);
-      if (keyFromElement !== null){
-        resetPianoTouches(keyFromElement);
-        if (!allKeysMap.get(keyFromElement).touched){
-          allKeysMap.get(keyFromElement).pianoKey.classList.add("pressed");
-          allKeysMap.get(keyFromElement).pianoAudio.currentTime = 0;
-          allKeysMap.get(keyFromElement).pianoAudio.play();
-          allKeysMap.get(keyFromElement).touched = true;
-        }
-      } else {
-        for (var [key, value] of allKeysMap) {
-          e.touched = false;
-          if (!value.pianoKey) continue;
-          if (!value.pressed && !value.touched && !value.clicked)
-            value.pianoKey.classList.remove("pressed");
-        }
-      }
+      syncPianoTouches(e.touches);
 
     }, {passive: false});
 
     // Used a static variable, tempMode, instead of the declared state variable, mode, due to re-rendering issues - an honest small work around.
-    document.addEventListener("keydown", function(e){
+    listen(document, "keydown", function(e){
 
       if (e.repeat) return; 
 
@@ -523,8 +580,7 @@ function App() {
       if (!document.activeElement.classList.contains("searchbar") && allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).pianoKey !== "undefined" && tempMode === "piano" && allKeysMap.get(e.keyCode).pressed === false) {
         allKeysMap.get(e.keyCode).pressed = true;
         allKeysMap.get(e.keyCode).pianoKey.classList.add("pressed"); 
-        allKeysMap.get(e.keyCode).pianoAudio.currentTime = 0; 
-        allKeysMap.get(e.keyCode).pianoAudio.play();
+        allKeysMap.get(e.keyCode).playPiano();
       }
 
       // IMPORT KEYS
@@ -547,9 +603,9 @@ function App() {
 
       }
 
-    }, false);
+    });
 
-    document.addEventListener("keyup", function(e){
+    listen(document, "keyup", function(e){
 
       if (e.repeat) return; 
 
@@ -557,6 +613,7 @@ function App() {
 
       if (allKeysMap.get(e.keyCode) && typeof allKeysMap.get(e.keyCode).pianoKey !== "undefined" && tempMode === "piano") {
         allKeysMap.get(e.keyCode).pressed = false;
+        allKeysMap.get(e.keyCode).releasePiano();
         if (!allKeysMap.get(e.keyCode).pressed && !allKeysMap.get(e.keyCode).touched && !allKeysMap.get(e.keyCode).clicked)
           allKeysMap.get(e.keyCode).pianoKey.classList.remove("pressed");
       }
@@ -585,15 +642,24 @@ function App() {
 
     });
 
-      document.addEventListener("mousedown", function(event){
+      listen(document, "mousedown", function(event){
         if (event.button === 0) mouseDown = true;
       });
-      document.addEventListener("mouseup", function(event){
-        if (event.button === 0) mouseDown = false;
+      listen(document, "mouseup", function(event){
+        if (event.button === 0) {
+          mouseDown = false;
+          for (const value of allKeysMap.values()) {
+            if (!value.pianoKey) continue;
+            value.clicked = false;
+            value.releasePiano();
+            if (!value.pressed && !value.touched) value.pianoKey.classList.remove('pressed');
+          }
+        }
       });
 
-      window.addEventListener("blur", function(){
+      listen(window, "blur", function(){
         mouseDown = false;
+        pianoAudio.current.silenceKeyboard();
 
         for (var [key, value] of allKeysMap) {
           if (value.presetKey) value.presetKey.classList.remove("pressed");
@@ -606,6 +672,7 @@ function App() {
 
       });
 
+    return () => inputController.abort();
   }, []);
 
   /* ------------------------------------------------------------------------- */
@@ -799,147 +866,86 @@ function App() {
 
   }, [playSnake]);
 
-// PIANO NOTE PLAYING ----- PLAYING A SONG FUNCTION
-
+// The score and audio share one clock; animation frames only paint the guide.
   useEffect(function(){
+    const audio = pianoAudio.current;
+    const holder = pianoObject.current;
+    const notesHolder = document.querySelector('.notes-holder');
+    const details = document.querySelector('.song-details');
+    const container = pianoNotes.current;
+    const requests = playbackRequest;
+    const request = ++requests.current;
+    const score = song ? createPianoScore(song) : null;
+    audio.setScore(score);
+    setAutoplay(false);
+    setPlayingState(1);
+    setPlayingSpeedState(1);
+    container.replaceChildren();
+    container.classList.toggle('visible', Boolean(song));
+    for (const value of allKeysMap.values()) value.pianoKey?.classList.remove('autoplay-pressed');
+    if (!score) return;
 
-    var pianoHolder = document.querySelector(".piano");
-    var newNote = document.querySelector(".notes-holder");
-    var detailHolder = document.querySelector(".song-details");
-    var specialLines = [];
-    //var pianoLines = document.querySelector(".piano-lines");
+    const resize = () => {
+      const bounds = holder.getBoundingClientRect();
+      notesHolder.style.width = `${bounds.width}px`;
+      notesHolder.style.height = `${bounds.top}px`;
+    };
+    resize();
+    container.style.height = `${score.endBeat * pianoUnit}px`;
+    score.notes.forEach((note) => {
+      const key = allKeysMap.get(note.note);
+      const element = document.createElement('div');
+      const sharp = allSharps.includes(key.character);
+      element.className = `note${note.hand === 'left' ? ' left' : ''}${sharp ? ' sharp-flat' : ''}`;
+      element.innerText = key.character;
+      element.style.bottom = `${note.delay * pianoUnit}px`;
+      element.style.height = `${note.length * pianoUnit}px`;
+      element.style.left = `${key.keyPos * normalWidth - (sharp ? sharpWidth / 2 : 0)}px`;
+      container.appendChild(element);
+    });
+    song.notes.filter((note) => note.note === null).forEach((marker) => {
+      const element = document.createElement('div');
+      element.className = marker.tempo ? 'line' : 'time-signature';
+      element.innerText = marker.tempo || marker.timeSignature;
+      element.style.bottom = `${marker.delay * pianoUnit}px`;
+      container.appendChild(element);
+    });
 
-    const resetPiano = function(){
-      changePlaying(1);
-      changePlayingSpeed(1);
-    }
-
-    resetPiano();
-
-    pianoNotes.current.innerHTML = "";
-    firstTempo = null;
-    firstTimeSignature = null;
-    currentTime = 0;
-    startTime = null;
-    pianoNotes.current.classList.remove("end");
-    
-    if (song === null) {playingSong = false; startTime = null;}
-    else {playingSong = true; setTimeout(function(){detailHolder.classList.remove("visible");}, 2000);}
-
-    // Executes only when there is a song available and exists.
-
-    if (song !== null){
-
-      startTime = new Date();
-      var longestNote = song.notes[0];
-      newNote.style.width = `${pianoHolder.getBoundingClientRect().width}px`;
-
-      song.notes.forEach(function(e, i){
-
-        // Simple function to find out the note that we end on, based off length and duration.
-        var keycode = e.note;
-        
-        if (keycode === null && typeof e.tempo !== "undefined") {
-          
-          if (firstTempo === null) {firstTempo = e.tempo; tempo = e.tempo;}
-
-          var newLine = document.createElement("div");
-          newLine.classList.add("line");
-          newLine.innerText = e.tempo;
-          newLine.style.bottom = `${e.delay * pianoUnit}px`;
-          pianoNotes.current.appendChild(newLine);
-
-          specialLines.push({element: newLine, tempo: e.tempo, delay: e.delay});
-
-          return;
-
-        } else if (keycode === null && typeof e.timeSignature !== "undefined"){
-
-          if (firstTimeSignature === null) {firstTimeSignature = e.timeSignature; timeSignature = e.timeSignature;}
-
-          var newSignature = document.createElement("div");
-          newSignature.classList.add("time-signature");
-          newSignature.innerText = e.timeSignature;
-          newSignature.style.bottom = `${e.delay * pianoUnit}px`;
-          pianoNotes.current.appendChild(newSignature);
-
-          specialLines.push({element: newSignature, timeSignature: e.timeSignature, delay: e.delay});
-
-          return;
-
-        }
-
-        var index = pianoKeys.indexOf(keycode);
-        if (index === -1) return;
-        if ( (parseFloat(e.length) + parseFloat(e.delay)) > (parseFloat(longestNote.length) + parseFloat(longestNote.delay)) ) longestNote = e;
-
-        // While searching for the longest note, we make them and put them on the note holder.
-        var newElement = document.createElement("div");
-        newElement.classList.add("note");
-        if (e.hand === "left") newElement.classList.add("left");
-        newElement.innerText = allKeysMap.get(e.note).character;
-        newElement.style.bottom = `${e.delay * pianoUnit}px`;
-        newElement.style.height = `${e.length * pianoUnit}px`;
-
-        if (allSharps.includes(allKeysMap.get(e.note).character)) {newElement.classList.add("sharp-flat"); newElement.style.left = `${allKeysMap.get(keycode).keyPos * normalWidth - (sharpWidth/2)}px`;   
-        } else {newElement.style.left= `${allKeysMap.get(keycode).keyPos * normalWidth}px`;}    
-
-        pianoNotes.current.appendChild(newElement);
-        pianoNotes.current.classList.add("visible");
-
-      })
-
-      // Now that all the notes are made, we must move them accordingly down the screen.
-
-      var startPosition = pianoHolder.getBoundingClientRect().top * -1 - (pianoUnit * 3);
-
-      currentTime = startPosition;
-      newNote.style.height = `${pianoHolder.getBoundingClientRect().top}px`;
-      pianoNotes.current.style.transform = `translateY(${currentTime}px)`;
-      pianoNotes.current.style.height = `${((parseFloat(longestNote.delay) + parseFloat(longestNote.length)) * pianoUnit)}px`;
-
-      // The actual looping portion of the Playing Song function.
-
-      const startPlaying = function(){
-
-        if (playingSong !== false && currentTime < pianoNotes.current.clientHeight){
-          
-          specialLines.forEach(function(e, i){
-            
-            var element = e.element;
-            var bounds = element.getBoundingClientRect().bottom;
-            if (typeof e.tempo !== "undefined" && bounds >= pianoHolder.getBoundingClientRect().top){
-              tempo = e.tempo
-              specialLines.splice(i, 1);
-            } else if (typeof e.timeSignature !== "undefined" && bounds >= pianoHolder.getBoundingClientRect().top){
-              timeSignature = parseFloat(e.timeSignature);
-              specialLines.splice(i, 1);
-            }
-
-          });
-
-          currentTime += (pianoUnit * getTimeDifference() * playing * playingSpeed * timeSignature * tempo/60);
-          pianoNotes.current.style.transform = `translateY(${currentTime}px)`;
-        } else if (playingSong === false || currentTime >= pianoNotes.current.clientHeight) {
-          playingSong = false; setSong(null); pianoNotes.current.classList.remove("visible"); return;
-        }
-
-        setTimeout(function(){
-          requestAnimationFrame(startPlaying);
-        }, 1000/tick);
-        
+    audio.start().then(() => {
+      if (request === requests.current) audio.play();
+    }).catch(() => {
+      if (request === requests.current) setPlayingState(0);
+    });
+    const detailTimeout = setTimeout(() => details.classList.remove('visible'), 2000);
+    let frame;
+    const paint = () => {
+      const position = audio.getPosition();
+      container.style.transform = `translateY(${score.secondsToBeat(position) * pianoUnit}px)`;
+      const active = new Set(audio.autoplay && audio.running
+        ? score.notes.filter((note) => note.start <= position && note.end > position).map((note) => note.note)
+        : []);
+      for (const [key, value] of allKeysMap) {
+        value.pianoKey?.classList.toggle('autoplay-pressed', active.has(key));
       }
-
-      // Initiating the loop for the first time, exits if doesn't work out.
-      requestAnimationFrame(startPlaying);
-
-    }
-
-    window.addEventListener("resize", function(){newNote.style.height = `${pianoHolder.getBoundingClientRect().top}px`;});
-    return function(){window.removeEventListener("resize", function(){newNote.style.height = `${pianoHolder.getBoundingClientRect().top}px`;});}
-
+      // Let the final note's release finish before clearing the song.
+      if (position >= score.end + 0.8 * audio.speed) {
+        audio.setScore(null);
+        setSong(null);
+        return;
+      }
+      frame = requestAnimationFrame(paint);
+    };
+    frame = requestAnimationFrame(paint);
+    window.addEventListener('resize', resize);
+    return () => {
+      requests.current++;
+      cancelAnimationFrame(frame);
+      clearTimeout(detailTimeout);
+      window.removeEventListener('resize', resize);
+      audio.pause();
+      for (const value of allKeysMap.values()) value.pianoKey?.classList.remove('autoplay-pressed');
+    };
   }, [song]);
-
 // --------------------------------------------------------------------
 
 /* -------------------------------------------------------------- */
@@ -967,7 +973,6 @@ function App() {
       </div>
       <div className="masthead">
         <span className="logo" onClick={function(){setMode("menu");}}>Peach<span className="bold">Mix</span></span>
-        <span className='text'>Not responsive yet - JC</span>
       </div>
 
       <div className="page-holder">
@@ -1012,29 +1017,40 @@ function App() {
 
         <div className="piano-holder">
 
-          <div ref={pianoObject} className="piano" onTouchEnd={function(){
+          <div className="piano-status" role="status" aria-live="polite">
+            {pianoStatus === 'loading' && 'Loading grand piano…'}
+            {pianoStatus === 'error' && <>
+              Could not load the grand piano. Check your connection.
+              <button type="button" onClick={() => pianoAudio.current.start().catch(() => {})}>Retry</button>
+            </>}
+          </div>
 
-            for (var [key, value] of allKeysMap) {
-              value.touched = false;
-              if (!value.pianoKey) continue;
-              if (!value.pressed && !value.touched && !value.clicked)
-                value.pianoKey.classList.remove("pressed");
-            }
+          <div ref={pianoObject} className="piano"
+            onTouchEnd={(event) => syncPianoTouches(event.touches)}
+            onTouchCancel={(event) => syncPianoTouches(event.touches)}></div>
 
-            }}></div>
-
-          <div className={`song-buttons${song !== null ? " visible" : ""}`}>
-            <div className="song-button" onClick={function(){playingState === 0 ? changePlaying(1) : changePlaying(0);}}>{playingState === 0 ? playingIcon : pauseIcon}</div>
-            <div className="song-button" onClick={function(){playingSong = false; setSong(null); pianoNotes.current.classList.remove("visible");}}>{endIcon}</div>
-            {
-            //<div className="song-button" onClick={function(){if (pianoUnit === 128) pianoUnit = 176; else if (pianoUnit === 176) pianoUnit = 80; else pianoUnit = 128;}}>{sizeIcon}</div>
-            }
-            <div className="song-button playback" onClick={function(){if (playingSpeedState === 1) changePlayingSpeed(2); else if (playingSpeedState === 2) changePlayingSpeed(0.5); else changePlayingSpeed(1);}}>
+          {song !== null && <div className="song-buttons visible">
+            <button type="button" className="song-button" disabled={pianoStatus !== 'ready'}
+              aria-label={playingState === 0 ? 'Resume song' : 'Pause song'}
+              title={playingState === 0 ? 'Resume song' : 'Pause song'}
+              onClick={() => changePlaying(playingState === 0 ? 1 : 0)}>{playingState === 0 ? playingIcon : pauseIcon}</button>
+            <button type="button" className="song-button" aria-label="Stop song" title="Stop song" onClick={stopSong}>{endIcon}</button>
+            <button type="button" className="song-button autoplay"
+              aria-label="Autoplay" title={autoplay ? 'Disable autoplay' : 'Enable autoplay'}
+              aria-pressed={autoplay} disabled={pianoStatus !== 'ready'}
+              onClick={() => {
+                const enabled = !autoplay;
+                setAutoplay(enabled);
+                pianoAudio.current.setAutoplay(enabled);
+              }}>{autoplayIcon}</button>
+            <button type="button" className="song-button playback" aria-label={`Playback speed: ${playingSpeedState}x`}
+              title={`Playback speed: ${playingSpeedState}x`}
+              onClick={function(){if (playingSpeedState === 1) changePlayingSpeed(2); else if (playingSpeedState === 2) changePlayingSpeed(0.5); else changePlayingSpeed(1);}}>
               {playingSpeedState === 2 && doubleSpeed}
               {playingSpeedState === 1 && normalSpeed}
               {playingSpeedState === 0.5 && halfSpeed}
-            </div>
-          </div>
+            </button>
+          </div>}
 
           <div className={`song-search${song !== null ? " hidden" : ""}`}>
             <div className="searchbar-holder">
@@ -1072,7 +1088,7 @@ function App() {
                   searchResults.append(search);
 
                   search.addEventListener("click", function(){
-                    setSong(result);
+                    selectSong(result);
                   });
 
                 });
@@ -1107,7 +1123,7 @@ function App() {
                   searchResults.append(search);
 
                   search.addEventListener("click", function(){
-                    setSong(result);
+                    selectSong(result);
                   });
 
                 });
